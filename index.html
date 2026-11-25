@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b4b45">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="icons/icon-32.png" sizes="32x32">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-title" content="Itqan">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Itqan — Quran Revision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Figtree:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: tender and unhurried — a companion who reassures, never an examiner
+   IDEA: an illuminated mushaf frame; the 30 juz as one ring walked a little each day
+   PICTURE: geometric-star band at the top, the khatm ring with today's juz glowing gold
+   COLOUR and TYPE: deep teal with gold line-work on white; coral only for "needs care"; Figtree + Noto Sans Malayalam, Amiri for Arabic
+   LAYOUT: one phone column, ornamented band, cards stacked, bottom tabs */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#081513);--card:light-dark(#f2f7f6,#10211e);--ink:light-dark(#0d2d2a,#e5f0ee);--soft:light-dark(#53716e,#9cb8b3);
+--teal:light-dark(#0b5a51,#4fb3a5);--deep:#0b4b45;--teal2:light-dark(#d8ebe7,#163a34);--gold:light-dark(#b07f22,#e0b25a);--goldbg:light-dark(#f8eed8,#2d2513);
+--coral:light-dark(#c4583f,#ee8a72);--coralbg:light-dark(#f9e3dd,#33201b);--line:light-dark(#d9e5e3,#203f3a);--empty:light-dark(#e6eeec,#192d2a)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Figtree,"Noto Sans Malayalam",system-ui,sans-serif;overflow-x:clip}
+:lang(ml) body,body.ml{font-size:15.5px;line-height:1.75}
+.band{background-color:var(--deep);color:#f4efe2;padding:calc(14px + env(safe-area-inset-top)) 16px 64px;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23e0b25a' stroke-opacity='.28' stroke-width='1'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3Cpath d='M0 0l11 11M56 0L45 11M0 56l11-11M56 56L45 45'/%3E%3C/g%3E%3C/svg%3E")}
+.band>div{max-width:560px;margin:0 auto}
+.top{display:flex;align-items:center;gap:10px}
+.brand{flex:1;display:flex;align-items:baseline;gap:10px}
+.brand b{font-size:24px;letter-spacing:-.01em}
+.brand span{font-family:Amiri,serif;font-size:26px;color:#e8c77d;line-height:1}
+.hb{min-width:44px;height:44px;border-radius:22px;border:1px solid rgb(255 255 255/.28);background:rgb(255 255 255/.08);color:#f4efe2;display:grid;place-items:center;cursor:pointer;font-weight:700;font-size:14px;padding:0 12px}
+.greet{margin:14px 0 0;font-size:18px;font-weight:600}
+.dates{font-size:13.5px;opacity:.82}
+.app{max-width:560px;margin:-48px auto 0;padding:0 16px calc(100px + env(safe-area-inset-bottom));position:relative}
+h2{font-size:19px;margin:0 0 4px;line-height:1.3}
+.ar{font-family:Amiri,serif;direction:rtl;font-size:25px;line-height:2;text-align:center}
+.card{background:var(--card);border-radius:20px;padding:18px;margin:14px 0}
+.card.hero{background:var(--bg);box-shadow:0 10px 30px -12px rgb(0 0 0/.35);border:1px solid var(--line)}
+.orn{border:1px solid var(--gold);background:linear-gradient(var(--goldbg),var(--goldbg)) padding-box}
+.muted{color:var(--soft);font-size:14px}
+p{margin:6px 0}
+button,select,input,textarea{font:inherit;font-size:16px;color:inherit}
+.btn{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);padding:10px 16px;cursor:pointer;font-weight:600}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:light-dark(#fff,#062420)}
+.btn.ghost{background:none;border:none;color:var(--teal);padding:10px 8px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.ringwrap{display:grid;place-items:center}
+.ring{width:min(72vw,280px);aspect-ratio:1}
+.ring text{fill:var(--ink);font-family:Figtree,"Noto Sans Malayalam",sans-serif}
+.motto{margin:2px 0 0;font-size:21px;line-height:1.8}
+.chk{display:flex;align-items:center;gap:14px;width:100%;text-align:start;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px;cursor:pointer;min-height:58px}
+.chk .box{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--teal);display:grid;place-items:center}
+.chk.on .box{background:var(--teal)}.chk.on .box::after{content:"";width:8px;height:13px;border:solid light-dark(#fff,#062420);border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-2px)}
+.chk.on{opacity:.72}
+.chk b{display:block}.chk span{font-size:14px;color:var(--soft)}
+.feel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.feel button{min-height:68px;border-radius:14px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font-weight:600;font-size:14px;padding:8px;line-height:1.3}
+.feel button i{display:block;width:14px;height:14px;border-radius:50%;margin:0 auto 6px}
+.feel button.sel{border:2px solid var(--teal)}
+.s{background:var(--teal)}.m{background:var(--gold)}.w{background:var(--coral)}.u{background:var(--empty)}
+.calmline{margin:14px 0 0;padding:12px 14px;border-radius:14px;background:var(--teal2)}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.tile{aspect-ratio:1;border-radius:14px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:var(--ink);padding:2px;line-height:1.2}
+.tile small{font-size:11px;font-weight:500;opacity:.85}
+.tile.s{background:var(--teal2)}.tile.m{background:var(--goldbg)}.tile.w{background:var(--coralbg)}.tile.u{background:var(--empty)}
+.tile.cur{box-shadow:inset 0 0 0 3px var(--gold)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--soft);margin:10px 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:6px}
+.dots{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:5px;margin-top:10px}
+.dots i{aspect-ratio:1;border-radius:50%;background:var(--empty)}.dots i.on{background:var(--teal)}.dots i.t{box-shadow:0 0 0 2px var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}
+.stats b{display:block;font-size:26px;line-height:1.1}.stats span{font-size:13px;color:var(--soft);display:block;line-height:1.3;margin-top:4px}
+.field{display:block;margin:12px 0}.field>span{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+input,select,textarea{width:100%;min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);padding:10px 12px}
+textarea{min-height:90px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.plan{list-style:none;padding:0;margin:8px 0 0}
+.plan li{display:grid;grid-template-columns:4.6em minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.plan li .d{font-weight:700;font-size:14px;white-space:nowrap}.plan li.today .d{color:var(--gold)}.plan li.done{opacity:.55}
+.note{border-top:1px solid var(--line);padding:12px 0;display:flex;gap:10px;align-items:flex-start}
+.note p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}.note.fixed{opacity:.55}
+.pill{display:inline-block;font-size:12px;font-weight:600;border-radius:99px;padding:2px 10px;background:var(--teal2);color:var(--teal)}
+.src{display:block;font-size:12.5px;color:var(--soft);margin-top:2px}
+.item{padding:12px 0;border-top:1px solid var(--line)}.item:first-of-type{border-top:0}
+.item b{display:block}
+.breath{width:170px;height:170px;margin:12px auto;border-radius:50%;background:var(--teal2);display:grid;place-items:center;position:relative}
+.breath::before{content:"";position:absolute;inset:16%;border-radius:50%;background:var(--teal);transform:scale(.6);transition:transform 4s ease-in-out}
+.breath.in::before,.breath.hold::before{transform:scale(1)}.breath.out::before{transform:scale(.6);transition-duration:6s}
+.breath b{position:relative;color:light-dark(#fff,#062420);font-size:15px;text-align:center;padding:0 10px}
+.done-card{text-align:center}
+.done-card .star{width:56px;height:56px;margin:4px auto 6px;display:block}
+@media(prefers-reduced-motion:no-preference){.done-card .star{animation:glow 2.4s ease-in-out 1}@keyframes glow{0%{transform:scale(.6) rotate(-20deg);opacity:0}60%{transform:scale(1.08) rotate(4deg);opacity:1}100%{transform:none}}}
+@media(prefers-reduced-motion:reduce){.breath::before{transition:none}}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+.nav div{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.nav button{background:none;border:none;min-height:62px;cursor:pointer;color:var(--soft);font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;line-height:1.2}
+.nav button svg{width:22px;height:22px}
+.nav button[aria-current=page]{color:var(--teal)}
+.sheet{position:fixed;inset:0;background:rgb(0 0 0/.42);display:none;align-items:flex-end;justify-content:center;z-index:9}
+.sheet.open{display:flex}
+.sheet>div{background:var(--bg);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+.hide{display:none}
+html{overscroll-behavior-y:none;-webkit-text-size-adjust:100%}
+button,a,select,input,textarea,label{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-height:46px}
+select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2353716e' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+body.lock{overflow:hidden}
+.sheet>div{position:relative;max-height:88dvh;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-top:28px}
+.sheet>div::before{content:"";position:absolute;top:10px;left:50%;width:40px;height:5px;border-radius:3px;background:var(--line);transform:translateX(-50%)}
+.xbtn{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);display:grid;place-items:center;cursor:pointer;z-index:2}
+.sheet h2{padding-right:52px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 14px 6px 10px;margin:0 0 -2px;border-radius:14px;border:1px solid rgb(255 255 255/.35);background:rgb(255 255 255/.14);color:#f4efe2;font-weight:600;font-size:14px;cursor:pointer;position:relative;z-index:1;backdrop-filter:blur(4px)}
+.back svg{width:18px;height:18px}
+.ob{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.step{display:flex;align-items:center;gap:10px;margin:20px 0 8px;font-weight:700;font-size:16px}
+.step i{flex:none;width:28px;height:28px;display:grid;place-items:center;font-style:normal;color:#fff;background:var(--gold);font-size:13px;clip-path:polygon(50% 0,100% 37%,82% 100%,18% 100%,0 37%);padding-top:3px}
+.g3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.g3 .field{margin:0}
+.tgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tc{display:flex;align-items:center;gap:10px;min-height:56px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--bg);text-align:start;cursor:pointer;font-weight:600;font-size:14px;line-height:1.3}
+.tc i{flex:none;width:14px;height:14px;clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.tc.sel{border:2px solid var(--teal);background:var(--teal2)}
+.seg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.seg3 .tc{justify-content:center;text-align:center}
+.wrap{display:flex;flex-wrap:wrap;gap:8px}.wrap .tc{min-height:44px;padding:8px 14px}
+.tip{margin-top:10px;padding:12px 14px;border-radius:14px;background:var(--goldbg);border:1px solid color-mix(in srgb,var(--gold) 40%,transparent)}
+.tip b{display:block;font-size:13px;color:var(--gold)}
+.k-forgot{background:#c4583f}.k-mutashabih{background:#2f5d7c}.k-word{background:#b07f22}.k-skip{background:#7a4f9a}.k-link{background:#0b5a51}.k-page{background:#53716e}.k-harakah{background:#a0527a}.k-tajweed{background:#3c7d3a}
+.wcard{position:relative;border:1px solid var(--line);background:var(--bg);border-radius:16px;padding:14px 14px 12px 18px;margin-top:10px;overflow:hidden}
+.wcard::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--kc,var(--teal))}
+.wcard.fx{opacity:.6}
+.wcard h3{margin:0;font-size:16px;line-height:1.35}
+.wcard .meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tag2{font-size:12px;font-weight:600;border-radius:99px;padding:3px 10px;background:var(--card)}
+.fdots{display:inline-flex;gap:3px;vertical-align:middle;margin-inline-start:4px}.fdots b{width:7px;height:7px;border-radius:50%;background:var(--line)}.fdots b.on{background:var(--coral)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.acts .btn{min-height:40px;padding:6px 12px;font-size:14px;border-radius:12px}
+.acts .btn.warn{color:var(--coral);border-color:var(--coral)}
+/* splash */
+#splash{position:fixed;inset:0;z-index:40;display:grid;place-items:center;transition:opacity .6s ease,visibility .6s}
+#splash.out{opacity:0;visibility:hidden}
+#splash .sp{text-align:center;color:#f4efe2}
+#splash svg{width:190px;height:190px;overflow:visible}
+#splash .seg{opacity:0;animation:segIn .5s ease forwards}
+#splash .st{fill:none;stroke:#e8c77d;stroke-width:2.2;stroke-dasharray:420;stroke-dashoffset:420;animation:draw 1.3s ease forwards .15s}
+#splash .stf{fill:#e0b25a;opacity:0;transform-origin:100px 100px;animation:fillIn .7s ease forwards 1.25s}
+#splash .ttl{font-family:Amiri,serif;font-size:44px;color:#e8c77d;opacity:0;animation:up .8s ease forwards 1.1s;margin-top:6px;line-height:1.3}
+#splash .tag{opacity:0;animation:up .8s ease forwards 1.45s;font-size:15px}
+@keyframes draw{to{stroke-dashoffset:0}}@keyframes segIn{to{opacity:1}}@keyframes fillIn{from{opacity:0;transform:scale(.6) rotate(-45deg)}to{opacity:1;transform:none}}@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#splash *{animation-duration:.01s!important;animation-delay:0s!important}}
+/* section buttons */
+.sec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+.sec{position:relative;overflow:hidden;border:none;border-radius:22px;padding:16px 14px 14px;min-height:122px;text-align:start;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;gap:10px;color:var(--ink);transition:transform .15s ease}
+.sec:active{transform:scale(.97)}
+.sec::after{content:"";position:absolute;right:-22px;top:-22px;width:84px;height:84px;opacity:.12;background:currentColor;clip-path:polygon(50% 0,61% 35%,100% 50%,61% 65%,50% 100%,39% 65%,0 50%,39% 35%)}
+.sec b{font-size:16px;line-height:1.25;display:block}.sec small{font-size:12.5px;color:var(--soft);line-height:1.35;display:block;margin-top:2px}
+.badge{width:50px;height:50px;display:grid;place-items:center;color:#fff;clip-path:polygon(50% 0,100% 37%,82% 100%,18% 100%,0 37%)}
+.badge svg{width:22px;height:22px;margin-top:4px}
+.sec.c1{background:var(--teal2)}.sec.c1 .badge{background:var(--teal)}
+.sec.c2{background:var(--goldbg)}.sec.c2 .badge{background:var(--gold)}
+.sec.c3{background:var(--coralbg)}.sec.c3 .badge{background:var(--coral)}
+.sec.c4{background:light-dark(#e4ecf3,#16232e)}.sec.c4 .badge{background:light-dark(#2f5d7c,#6fa3c6)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;scroll-snap-type:x mandatory;margin-top:14px}
+.chip{flex:none;scroll-snap-align:start;display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px 8px 10px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 2px 8px -4px rgb(0 0 0/.25)}
+.chip i{width:18px;height:18px;background:var(--gold);clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.btn.pri{border-radius:16px;background:linear-gradient(180deg,var(--teal),light-dark(#084640,#3d9a8d));box-shadow:0 6px 16px -8px var(--teal)}
+.nav button span.ic{display:grid;place-items:center;width:46px;height:30px;border-radius:12px;transition:background .2s}
+.nav button[aria-current=page] span.ic{background:var(--teal2);clip-path:polygon(18% 0,82% 0,100% 30%,100% 70%,82% 100%,18% 100%,0 70%,0 30%)}
+.ob{position:fixed;inset:0;z-index:20;overflow:auto;color:#f4efe2;padding:calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom))}
+.ob>div{max-width:480px;margin:0 auto;text-align:center}
+.ob .mark{width:76px;height:76px;border-radius:20px;margin:8px auto 0;display:block;box-shadow:0 0 0 1px rgb(232 199 125/.6)}
+.ob h1{font-size:30px;margin:10px 0 0;line-height:1.2}.ob .arb{font-family:Amiri,serif;font-size:34px;color:#e8c77d;line-height:1.3}
+.ob .pane{background:var(--bg);color:var(--ink);border-radius:22px;padding:18px;margin-top:18px;text-align:start}
+.opt{display:block;width:100%;text-align:start;border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:12px 14px;margin-top:8px;cursor:pointer;min-height:56px}
+.opt b{display:block}.opt span{font-size:13.5px;color:var(--soft)}.opt.sel{border:2px solid var(--teal);background:var(--teal2)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg .opt{text-align:center;margin:0}
+</style>
+</head>
+<body>
+<header class="band"><div>
+  <div class="top">
+    <div class="brand"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b4b45'/%3E%3Cg fill='%23e0b25a'%3E%3Crect x='28' y='28' width='44' height='44'/%3E%3Crect x='28' y='28' width='44' height='44' transform='rotate(45 50 50)'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='11' fill='%230b4b45'/%3E%3C/svg%3E" alt="" width="30" height="30" style="align-self:center;border-radius:8px;box-shadow:0 0 0 1px rgb(232 199 125/.5)"><b>Itqan</b><span>إتقان</span></div>
+    <button class="hb" id="langBtn" aria-label="Language">മല</button>
+    <button class="hb" id="gear" aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+  </div>
+  <p class="greet" id="greet"></p>
+  <p class="dates" id="dates"></p>
+</div></header>
+
+<div class="app">
+<main id="v-today"></main>
+<main id="v-map" class="hide"></main>
+<main id="v-test" class="hide"></main>
+<main id="v-notes" class="hide"></main>
+<main id="v-heart" class="hide"></main>
+</div>
+
+<nav class="nav"><div id="nav"></div></nav>
+<div class="sheet" id="sheet"><div id="sheetBody" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+{
+const S=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
+const HZ=[1,106,208,282,367,446,518];
+const SU=[["الفاتحة", "Al-Fatihah", 1, 7], ["البقرة", "Al-Baqarah", 2, 286], ["آل عمران", "Al Imran", 50, 200], ["النساء", "An-Nisa", 77, 176], ["المائدة", "Al-Ma'idah", 106, 120], ["الأنعام", "Al-An'am", 128, 165], ["الأعراف", "Al-A'raf", 151, 206], ["الأنفال", "Al-Anfal", 177, 75], ["التوبة", "At-Tawbah", 187, 129], ["يونس", "Yunus", 208, 109], ["هود", "Hud", 221, 123], ["يوسف", "Yusuf", 235, 111], ["الرعد", "Ar-Ra'd", 249, 43], ["إبراهيم", "Ibrahim", 255, 52], ["الحجر", "Al-Hijr", 262, 99], ["النحل", "An-Nahl", 267, 128], ["الإسراء", "Al-Isra", 282, 111], ["الكهف", "Al-Kahf", 293, 110], ["مريم", "Maryam", 305, 98], ["طه", "Ta-Ha", 312, 135], ["الأنبياء", "Al-Anbiya", 322, 112], ["الحج", "Al-Hajj", 332, 78], ["المؤمنون", "Al-Mu'minun", 342, 118], ["النور", "An-Nur", 350, 64], ["الفرقان", "Al-Furqan", 359, 77], ["الشعراء", "Ash-Shu'ara", 367, 227], ["النمل", "An-Naml", 377, 93], ["القصص", "Al-Qasas", 385, 88], ["العنكبوت", "Al-'Ankabut", 396, 69], ["الروم", "Ar-Rum", 404, 60], ["لقمان", "Luqman", 411, 34], ["السجدة", "As-Sajdah", 415, 30], ["الأحزاب", "Al-Ahzab", 418, 73], ["سبأ", "Saba", 428, 54], ["فاطر", "Fatir", 434, 45], ["يس", "Ya-Sin", 440, 83], ["الصافات", "As-Saffat", 446, 182], ["ص", "Sad", 453, 88], ["الزمر", "Az-Zumar", 458, 75], ["غافر", "Ghafir", 467, 85], ["فصلت", "Fussilat", 477, 54], ["الشورى", "Ash-Shura", 483, 53], ["الزخرف", "Az-Zukhruf", 489, 89], ["الدخان", "Ad-Dukhan", 496, 59], ["الجاثية", "Al-Jathiyah", 499, 37], ["الأحقاف", "Al-Ahqaf", 502, 35], ["محمد", "Muhammad", 507, 38], ["الفتح", "Al-Fath", 511, 29], ["الحجرات", "Al-Hujurat", 515, 18], ["ق", "Qaf", 518, 45], ["الذاريات", "Adh-Dhariyat", 520, 60], ["الطور", "At-Tur", 523, 49], ["النجم", "An-Najm", 526, 62], ["القمر", "Al-Qamar", 528, 55], ["الرحمن", "Ar-Rahman", 531, 78], ["الواقعة", "Al-Waqi'ah", 534, 96], ["الحديد", "Al-Hadid", 537, 29], ["المجادلة", "Al-Mujadilah", 542, 22], ["الحشر", "Al-Hashr", 545, 24], ["الممتحنة", "Al-Mumtahanah", 549, 13], ["الصف", "As-Saff", 551, 14], ["الجمعة", "Al-Jumu'ah", 553, 11], ["المنافقون", "Al-Munafiqun", 554, 11], ["التغابن", "At-Taghabun", 556, 18], ["الطلاق", "At-Talaq", 558, 12], ["التحريم", "At-Tahrim", 560, 12], ["الملك", "Al-Mulk", 562, 30], ["القلم", "Al-Qalam", 564, 52], ["الحاقة", "Al-Haqqah", 566, 52], ["المعارج", "Al-Ma'arij", 568, 44], ["نوح", "Nuh", 570, 28], ["الجن", "Al-Jinn", 572, 28], ["المزمل", "Al-Muzzammil", 574, 20], ["المدثر", "Al-Muddaththir", 575, 56], ["القيامة", "Al-Qiyamah", 577, 40], ["الإنسان", "Al-Insan", 578, 31], ["المرسلات", "Al-Mursalat", 580, 50], ["النبأ", "An-Naba", 582, 40], ["النازعات", "An-Nazi'at", 583, 46], ["عبس", "'Abasa", 585, 42], ["التكوير", "At-Takwir", 586, 29], ["الانفطار", "Al-Infitar", 587, 19], ["المطففين", "Al-Mutaffifin", 587, 36], ["الانشقاق", "Al-Inshiqaq", 589, 25], ["البروج", "Al-Buruj", 590, 22], ["الطارق", "At-Tariq", 591, 17], ["الأعلى", "Al-A'la", 591, 19], ["الغاشية", "Al-Ghashiyah", 592, 26], ["الفجر", "Al-Fajr", 593, 30], ["البلد", "Al-Balad", 594, 20], ["الشمس", "Ash-Shams", 595, 15], ["الليل", "Al-Layl", 595, 21], ["الضحى", "Ad-Duha", 596, 11], ["الشرح", "Ash-Sharh", 596, 8], ["التين", "At-Tin", 597, 8], ["العلق", "Al-'Alaq", 597, 19], ["القدر", "Al-Qadr", 598, 5], ["البينة", "Al-Bayyinah", 598, 8], ["الزلزلة", "Az-Zalzalah", 599, 8], ["العاديات", "Al-'Adiyat", 599, 11], ["القارعة", "Al-Qari'ah", 600, 11], ["التكاثر", "At-Takathur", 600, 8], ["العصر", "Al-'Asr", 601, 3], ["الهمزة", "Al-Humazah", 601, 9], ["الفيل", "Al-Fil", 601, 5], ["قريش", "Quraysh", 602, 4], ["الماعون", "Al-Ma'un", 602, 7], ["الكوثر", "Al-Kawthar", 602, 3], ["الكافرون", "Al-Kafirun", 603, 6], ["النصر", "An-Nasr", 603, 3], ["المسد", "Al-Masad", 603, 5], ["الإخلاص", "Al-Ikhlas", 604, 4], ["الفلق", "Al-Falaq", 604, 5], ["الناس", "An-Nas", 604, 6]];
+const suEnd=i=>{const nx=i<113?SU[i+1][2]:605;return Math.max(SU[i][2],nx-1)};
+const surahsOf=j=>{const a=S[j-1],b=jEnd(j),r=[];SU.forEach((x,i)=>{if(x[2]<=b&&suEnd(i)>=a)r.push(i+1)});return r};
+const suName=s=>s?s+". "+SU[s-1][1]+" · "+SU[s-1][0]:"";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const key=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const fmt=k=>k?k.split("-").reverse().join("/"):"—";
+const addDays=(k,n)=>{const d=new Date(k+"T12:00");d.setDate(d.getDate()+n);return key(d)};
+const diff=(a,b)=>Math.round((new Date(b+"T12:00")-new Date(a+"T12:00"))/864e5);
+const juzOf=p=>{let j=0;while(j<29&&S[j+1]<=p)j++;return j+1};
+const jEnd=j=>(S[j]||605)-1;
+const hizbOf=p=>{let h=0;while(h<6&&HZ[h+1]<=p)h++;return h+1};
+const T=()=>key(new Date());
+const perDay=()=>st.pace==="h"?87:st.pace;
+function nextTurn(j){const done=st.log[T()]&&st.log[T()].done,cur=juzOf(st.pos);if(!done&&j===cur)return 0;
+  const start=S[j-1],ahead=start>=st.pos?start-st.pos:604-st.pos+start;const n=Math.round(ahead/perDay())+(done?1:0);return Math.max(done?1:0,n)}
+
+// ---------- words ----------
+const W={en:{
+ sub:"Keep the Quran gently, day by day",greet:n=>n?"Assalamu alaikum, "+n:"Assalamu alaikum",
+ tabs:["Today","Juz map","Test","Notes","Heart"],juz:"Juz",khatm:"Khatm",ofCycle:p=>p+"% of this cycle",
+ motto:"“We have made the Quran easy to remember” (54:17). Each juz waits calmly for its own day.",
+ today:"Today's revision",pages:n=>n+" pages",pr:(a,b)=>"pages "+a+"–"+b,
+ sit3:["After Fajr","In Duha and Sunnah prayers","In Qiyam or after Isha"],sit2:["After Fajr","Evening"],sit1:"One sitting",
+ all1:"This is all you need to do today.",all2:"Every other juz has its own day in the cycle, and Itqan keeps track of it for you.",
+ how:"How did it feel?",feel:{s:"Smooth",m:"A few slips",w:"Needed the mushaf"},
+ done:"Today is complete. Alhamdulillah.",felt:"Felt",tomorrow:"Tomorrow",undo:"Undo today",
+ wb:"Welcome back.",wb2:"No catching up and no double portions. Simply continue from where you stopped.",
+ str:"Strengthen",strSub:"Optional · a short extra visit to a juz that felt weaker",strHow:"Read once looking, then once from memory",
+ testPill:d=>"Halaqah test · "+d,testToday:"Test preparation for today",
+ rev:l=>"Revise "+l+" fully, aloud",light:l=>"Light day: listen to "+l+" once, recite a page from each, sleep early",testDay:"Test day: breathe, make dua, recite slowly. You are ready, in sha Allah.",
+ st:["khatms done","days revised","days this week"],last30:"Last 30 days",fromSunnah:"Daily reminder",
+ mapT:"Your 30 juz",mapD:"Colour shows how each juz felt last time; the small number is days since you revised it. Tap a juz to update it.",
+ leg:{s:"Smooth",m:"A few slips",w:"Needs care",u:"Not rated"},tday:"today",dsuf:"d",
+ helpT:"How this helps",helpD:"Juz that need care appear in “Strengthen” on the Today page, half a juz at a time, until they turn smooth. You never have to work out what to revise.",
+ lastRev:"last revised",times:n=>n+" times",howNow:"How does it feel now?",startHere:"Start daily cycle here",close:"Close",
+ testT:"Halaqah test plan",testD:"Enter the test date and the juz it covers. Itqan spreads the revision calmly over the days you have, with a light last day so you go in rested.",
+ tDate:"Test date",tSel:n=>"Juz in the test ("+n+" selected)",tClear:"Clear test plan",planUntil:d=>"Plan until "+d,planNote:"Your daily revision continues as normal alongside this.",todayW:"Today",
+ notesT:"Weak spots",notesD:"Where did you hesitate, or mix up similar verses (mutashabihat)? Note it once and look at it before that juz's next day.",
+ nPage:"Page (optional)",nWhat:"What to remember",nPh:"e.g. mixed this ayah's ending with the similar one in Al-A‘raf",nSave:"Save note",nOpen:n=>n+" open",fixed:"Fixed",reopen:"Reopen",nNone:"No notes yet. Add one whenever a spot needs attention.",
+ setT:"Settings",sName:"Name (for the greeting)",sPace:"Daily pace",sSplit:"Split each day into",sits:n=>n+(n>1?" sittings":" sitting"),sPos:"Current position (page in the 604-page Madinah mushaf)",save:"Save",
+ bkT:"Backup",bkD:"Copy your progress and keep it in WhatsApp or Notes. Paste it back here on a new phone.",copy:"Copy backup",restore:"Restore",pastePh:"Paste a backup here",
+ paces:[[10,"Gentle — ½ juz a day","a khatm about every 2 months"],[20,"Steady — 1 juz a day","a khatm every month (recommended)"],[40,"Strong — 2 juz a day","a khatm every 15 days"],["h","Seven ahzab — the Sahabah's weekly division","a khatm every week"]],
+ hz:["Al-Fatihah – An-Nisa","Al-Ma’idah – At-Tawbah","Yunus – An-Nahl","Al-Isra – Al-Furqan","Ash-Shu‘ara – Ya-Sin","As-Saffat – Al-Hujurat","Qaf – An-Nas"],hizb:"Hizb",
+ tSaved:"Saved. Barakallahu feekum",tKhatm:"Khatm complete! Alhamdulillah",tJuz:j=>"Juz "+j+" updated",tStart:j=>"Daily cycle now starts at Juz "+j,tSet:"Settings saved",tCopied:"Backup copied",tSelect:"Select the text below and copy it",tRestored:"Backup restored",tBad:"That backup could not be read",tNote:"Note saved",
+ obWel:"A calm companion for keeping the Quran you have memorised — a little each day, on the way of the Salaf.",obLang:"Language",obName:"Your name (optional)",obPace:"How much each day?",obStart:"Where are you in your revision now?",obGo:"Bismillah — begin",obNote:"You can change all of this later in Settings.",
+ nextIn:n=>n===0?"today":"in "+n+"d",nextTurn:"next turn",nextLong:n=>n===0?"Its turn is today":"Its turn comes in "+n+(n===1?" day":" days"),calmBtn:"Breathe before the test",
+ mapD2:"Every juz has its own day. The small text shows when each one's turn comes — nothing is left behind. Colour shows how it felt last time; tap a juz to update it.",
+ nt:{h1:"Weak spots",lead:"A calm notebook for places that slip. Note it once — Itqan shows it again on the day that juz comes, so you never have to carry it in your mind.",
+ s1:"Where?",s2:"What happened?",s3:"How often does it happen?",s4:"Where did you notice it?",s5:"A short note (optional)",
+ juz:"Juz",surah:"Surah",ayah:"Ayah",page:"Page",any:"—",mixedWith:"Mixed it with which place?",
+ types:{forgot:"Forgot or stopped",mutashabih:"Mixed with a similar verse",word:"Said a wrong word",skip:"Skipped a word or ayah",link:"Joining to the next ayah",page:"Start of a page",harakah:"Harakah (vowel)",tajweed:"Tajweed"},
+ tips:{forgot:"Read the ayah from the mushaf three times, then recite it from memory joined with the ayah before it.",mutashabih:"Open both places side by side. Find the one word that differs, and link it to the story or theme of each surah.",word:"Lightly underline the word in your mushaf with a pencil, and recite the ayah slowly five times.",skip:"Recite the ayah before and after it together, and count the ayahs on that page.",link:"Practise the last words of this ayah joined to the first words of the next, until they flow as one.",page:"Learn the opening words of each page — the ‘key’ that unlocks it.",harakah:"Listen to one reciter for this ayah and repeat after him three times.",tajweed:"Check the rule with your teacher, then listen and imitate one reciter."},
+ tipT:"How to fix it",freq:{1:"Once",2:"Sometimes",3:"Often"},where:{daily:"Daily revision",salah:"In salah",test:"Halaqah test",self:"Self-test",listen:"While listening"},
+ ph:"Anything that will help you remember…",save:"Save this weak spot",saved:"Saved — it will appear on that juz's day",
+ listT:"Your weak spots",open:"Open",fixed:"Fixed",all:"All",allJuz:"All juz",reviewed:"I reviewed it",markFixed:"Mark as fixed",reopen:"Reopen",del:"Delete",confirm:"Tap again to delete",
+ revCount:(n,d)=>"Reviewed "+n+(n===1?" time":" times")+(d?" · last "+d:""),none:"Nothing here. When a place slips, note it above — that's all.",
+ before:"Before you begin today",beforeD:n=>n+(n===1?" weak spot is":" weak spots are")+" in today's pages. Look at "+(n===1?"it":"them")+" first.",see:"See them"},
+ backTo:"Today",closeL:"Close",
+ secs:[["Juz map","See when each juz’s turn comes"],["Test plan","Calm preparation for the halaqah"],["Weak spots","Notes on places that slip"],["Heart","The way of the Salaf, duas, calm"]],splashTag:"Keep the Quran gently, day by day",
+ bIn:"Breathe in",bHold:"Hold",bOut:"Breathe out",bStart:"Start",bBegin:"Begin breathing",bStop:"Stop",bEnd:"Alhamdulillah"
+},ml:{
+ sub:"ഖുർആൻ സൗമ്യമായി, ദിനംപ്രതി കാത്തുസൂക്ഷിക്കാൻ",greet:n=>n?"അസ്സലാമു അലൈക്കും, "+n:"അസ്സലാമു അലൈക്കും",
+ tabs:["ഇന്ന്","ജുസ്‌അ്","ടെസ്റ്റ്","കുറിപ്പ്","ഹൃദയം"],juz:"ജുസ്‌അ്",khatm:"ഖത്മ്",ofCycle:p=>"ഈ ഖത്മിന്റെ "+p+"%",
+ motto:"“ഖുർആനിനെ നാം ഓർമ്മിക്കാൻ എളുപ്പമാക്കിയിരിക്കുന്നു” (54:17). ഓരോ ജുസ്‌ഉം അതിന്റെ ദിവസത്തിനായി ശാന്തമായി കാത്തിരിക്കുന്നു.",
+ today:"ഇന്നത്തെ റിവിഷൻ",pages:n=>n+" പേജ്",pr:(a,b)=>"പേജ് "+a+"–"+b,
+ sit3:["ഫജ്റിന് ശേഷം","ളുഹാ, സുന്നത്ത് നമസ്കാരങ്ങളിൽ","ഖിയാമിലോ ഇശാക്ക് ശേഷമോ"],sit2:["ഫജ്റിന് ശേഷം","വൈകുന്നേരം"],sit1:"ഒറ്റ ഇരുത്തം",
+ all1:"ഇന്ന് ചെയ്യേണ്ടത് ഇത്ര മാത്രം.",all2:"മറ്റു ഓരോ ജുസ്‌ഇനും അതിന്റേതായ ദിവസമുണ്ട്. അത് ഇത്ഖാൻ ഓർത്തുവെക്കും.",
+ how:"എങ്ങനെ തോന്നി?",feel:{s:"ഒഴുക്കോടെ",m:"ചെറിയ തടസ്സങ്ങൾ",w:"മുസ്ഹഫ് നോക്കി"},
+ done:"ഇന്നത്തേത് പൂർത്തിയായി. അൽഹംദുലില്ലാഹ്.",felt:"അനുഭവം",tomorrow:"നാളെ",undo:"ഇന്നത്തേത് തിരുത്തുക",
+ wb:"തിരിച്ചുവന്നതിൽ സന്തോഷം.",wb2:"ഇരട്ടി ഭാഗം വേണ്ട, ഒന്നും നികത്തേണ്ട. നിർത്തിയിടത്ത് നിന്ന് തുടരുക.",
+ str:"ബലപ്പെടുത്തൽ",strSub:"നിർബന്ധമില്ല · ദുർബലമായി തോന്നിയ ഒരു ജുസ്‌ഇലേക്ക് ഒരു ചെറിയ അധിക സന്ദർശനം",strHow:"ഒരു തവണ നോക്കി, ഒരു തവണ മനഃപാഠത്തിൽ നിന്ന്",
+ testPill:d=>"ഹൽഖ ടെസ്റ്റ് · "+d,testToday:"ഇന്നത്തെ ടെസ്റ്റ് തയ്യാറെടുപ്പ്",
+ rev:l=>l+" പൂർണ്ണമായി ഉറക്കെ ഓതുക",light:l=>"ഭാരം കുറഞ്ഞ ദിവസം: "+l+" ഒരു തവണ കേൾക്കുക, ഓരോന്നിൽ നിന്നും ഒരു പേജ് ഓതുക, നേരത്തെ ഉറങ്ങുക",testDay:"ടെസ്റ്റ് ദിവസം: ശാന്തമായി ശ്വസിക്കുക, ദുആ ചെയ്യുക, പതുക്കെ ഓതുക. ഇൻ ശാ അല്ലാഹ്, നിങ്ങൾ തയ്യാറാണ്.",
+ st:["പൂർത്തിയായ ഖത്മുകൾ","റിവൈസ് ചെയ്ത ദിവസങ്ങൾ","ഈ ആഴ്ച"],last30:"കഴിഞ്ഞ 30 ദിവസം",fromSunnah:"ഇന്നത്തെ ഓർമ്മ",
+ mapT:"നിങ്ങളുടെ 30 ജുസ്‌അ്",mapD:"ഓരോ ജുസ്‌ഉം അവസാനം എങ്ങനെ തോന്നി എന്ന് നിറം കാണിക്കുന്നു; ചെറിയ സംഖ്യ അവസാനം ഓതിയിട്ട് എത്ര ദിവസമായി എന്നും. മാറ്റാൻ ഒരു ജുസ്‌ഇൽ തൊടുക.",
+ leg:{s:"ഒഴുക്കോടെ",m:"ചെറിയ തടസ്സങ്ങൾ",w:"ശ്രദ്ധ വേണം",u:"വിലയിരുത്തിയില്ല"},tday:"ഇന്ന്",dsuf:" ദി",
+ helpT:"ഇത് എങ്ങനെ സഹായിക്കുന്നു",helpD:"ശ്രദ്ധ വേണ്ട ജുസ്‌ഉകൾ പകുതി വീതം ഇന്നത്തെ പേജിലെ “ബലപ്പെടുത്തൽ” ഭാഗത്ത് വരും — ഒഴുക്കോടെ ആകുന്നത് വരെ. എന്ത് ഓതണം എന്ന് നിങ്ങൾ ആലോചിക്കേണ്ടതില്ല.",
+ lastRev:"അവസാനം ഓതിയത്",times:n=>n+" തവണ",howNow:"ഇപ്പോൾ എങ്ങനെ തോന്നുന്നു?",startHere:"ദിവസേനയുള്ള ക്രമം ഇവിടെ നിന്ന് തുടങ്ങുക",close:"അടയ്ക്കുക",
+ testT:"ഹൽഖ ടെസ്റ്റ് പ്ലാൻ",testD:"ടെസ്റ്റ് തീയതിയും അതിലെ ജുസ്‌ഉകളും നൽകുക. ബാക്കിയുള്ള ദിവസങ്ങളിലേക്ക് ഇത്ഖാൻ റിവിഷൻ ശാന്തമായി വിഭജിക്കും; തലേദിവസം ഭാരം കുറഞ്ഞതായിരിക്കും.",
+ tDate:"ടെസ്റ്റ് തീയതി",tSel:n=>"ടെസ്റ്റിലെ ജുസ്‌ഉകൾ ("+n+" എണ്ണം)",tClear:"പ്ലാൻ ഒഴിവാക്കുക",planUntil:d=>d+" വരെയുള്ള പ്ലാൻ",planNote:"ദിവസേനയുള്ള റിവിഷൻ ഇതോടൊപ്പം സാധാരണ പോലെ തുടരും.",todayW:"ഇന്ന്",
+ notesT:"തെറ്റുന്ന സ്ഥലങ്ങൾ",notesD:"എവിടെയാണ് തടഞ്ഞത്, അല്ലെങ്കിൽ സമാന ആയത്തുകൾ (മുതശാബിഹാത്ത്) മാറിപ്പോയത്? ഒരിക്കൽ കുറിക്കുക, ആ ജുസ്‌ഇന്റെ അടുത്ത ദിവസം ഓതുന്നതിന് മുമ്പ് നോക്കുക.",
+ nPage:"പേജ് (ആവശ്യമെങ്കിൽ)",nWhat:"ഓർക്കേണ്ടത്",nPh:"ഉദാ: ഈ ആയത്തിന്റെ അവസാനം അൽ-അഅ്റാഫിലെ സമാന ആയത്തുമായി മാറിപ്പോയി",nSave:"കുറിപ്പ് സേവ് ചെയ്യുക",nOpen:n=>n+" എണ്ണം ബാക്കി",fixed:"ശരിയായി",reopen:"വീണ്ടും തുറക്കുക",nNone:"ഇതുവരെ കുറിപ്പുകളില്ല. ഒരു സ്ഥലത്തിന് ശ്രദ്ധ വേണമെന്ന് തോന്നുമ്പോൾ ചേർക്കുക.",
+ setT:"ക്രമീകരണങ്ങൾ",sName:"പേര് (സലാം പറയാൻ)",sPace:"ദിവസേനയുള്ള അളവ്",sSplit:"ഓരോ ദിവസവും എത്ര ഇരുത്തങ്ങളായി",sits:n=>n+" ഇരുത്തം",sPos:"ഇപ്പോഴത്തെ സ്ഥാനം (604 പേജ് മദീന മുസ്ഹഫിലെ പേജ്)",save:"സേവ് ചെയ്യുക",
+ bkT:"ബാക്കപ്പ്",bkD:"പുരോഗതി കോപ്പി ചെയ്ത് WhatsApp-ലോ നോട്ട്സിലോ സൂക്ഷിക്കുക. പുതിയ ഫോണിൽ ഇവിടെ പേസ്റ്റ് ചെയ്താൽ മതി.",copy:"ബാക്കപ്പ് കോപ്പി ചെയ്യുക",restore:"തിരികെ കൊണ്ടുവരിക",pastePh:"ബാക്കപ്പ് ഇവിടെ പേസ്റ്റ് ചെയ്യുക",
+ paces:[[10,"സൗമ്യം — ദിവസം അര ജുസ്‌അ്","ഏകദേശം 2 മാസത്തിൽ ഒരു ഖത്മ്"],[20,"സ്ഥിരം — ദിവസം ഒരു ജുസ്‌അ്","മാസത്തിൽ ഒരു ഖത്മ് (നിർദ്ദേശിക്കുന്നത്)"],[40,"ശക്തം — ദിവസം രണ്ട് ജുസ്‌അ്","15 ദിവസത്തിൽ ഒരു ഖത്മ്"],["h","ഏഴ് ഹിസ്ബ് — സ്വഹാബികളുടെ ആഴ്ച ക്രമം","ആഴ്ചയിൽ ഒരു ഖത്മ്"]],
+ hz:["അൽ-ഫാതിഹ – അന്നിസാഅ്","അൽ-മാഇദ – അത്തൗബ","യൂനുസ് – അന്നഹ്ൽ","അൽ-ഇസ്റാഅ് – അൽ-ഫുർഖാൻ","അശ്ശുഅറാഅ് – യാസീൻ","അസ്സ്വാഫ്ഫാത്ത് – അൽ-ഹുജുറാത്ത്","ഖാഫ് – അന്നാസ്"],hizb:"ഹിസ്ബ്",
+ tSaved:"സേവ് ചെയ്തു. ബാറകല്ലാഹു ഫീകും",tKhatm:"ഖത്മ് പൂർത്തിയായി! അൽഹംദുലില്ലാഹ്",tJuz:j=>"ജുസ്‌അ് "+j+" പുതുക്കി",tStart:j=>"ദിവസേനയുള്ള ക്രമം ഇനി ജുസ്‌അ് "+j+" മുതൽ",tSet:"ക്രമീകരണങ്ങൾ സേവ് ചെയ്തു",tCopied:"ബാക്കപ്പ് കോപ്പി ചെയ്തു",tSelect:"താഴെയുള്ള ടെക്സ്റ്റ് സെലക്ട് ചെയ്ത് കോപ്പി ചെയ്യുക",tRestored:"ബാക്കപ്പ് തിരികെ കൊണ്ടുവന്നു",tBad:"ഈ ബാക്കപ്പ് വായിക്കാൻ കഴിഞ്ഞില്ല",tNote:"കുറിപ്പ് സേവ് ചെയ്തു",
+ obWel:"മനഃപാഠമാക്കിയ ഖുർആൻ ദിവസവും അൽപ്പാൽപ്പമായി, സലഫിന്റെ വഴിയിൽ, ശാന്തമായി കാത്തുസൂക്ഷിക്കാൻ ഒരു കൂട്ടുകാരൻ.",obLang:"ഭാഷ",obName:"നിങ്ങളുടെ പേര് (ആവശ്യമെങ്കിൽ)",obPace:"ഓരോ ദിവസവും എത്ര?",obStart:"ഇപ്പോൾ റിവിഷനിൽ എവിടെയാണ്?",obGo:"ബിസ്മില്ലാഹ് — തുടങ്ങാം",obNote:"ഇതെല്ലാം പിന്നീട് ക്രമീകരണങ്ങളിൽ മാറ്റാം.",
+ nextIn:n=>n===0?"ഇന്ന്":n+" ദി.",nextTurn:"അടുത്ത ഊഴം",nextLong:n=>n===0?"ഇന്നാണ് ഇതിന്റെ ഊഴം":n+" ദിവസത്തിനകം ഇതിന്റെ ഊഴം വരും",calmBtn:"ടെസ്റ്റിന് മുമ്പ് ശാന്തമായി ശ്വസിക്കുക",
+ mapD2:"ഓരോ ജുസ്‌ഇനും അതിന്റേതായ ദിവസമുണ്ട്. ഓരോന്നിന്റെയും ഊഴം എപ്പോൾ വരും എന്ന് ചെറിയ അക്ഷരത്തിൽ കാണാം — ഒന്നും പിന്നിലാകില്ല. അവസാനം എങ്ങനെ തോന്നി എന്ന് നിറം കാണിക്കുന്നു; മാറ്റാൻ ഒരു ജുസ്‌ഇൽ തൊടുക.",
+ nt:{h1:"തെറ്റുന്ന സ്ഥലങ്ങൾ",lead:"തടയുന്ന ഇടങ്ങൾക്കുള്ള ശാന്തമായ ഒരു നോട്ടുബുക്ക്. ഒരിക്കൽ കുറിച്ചാൽ മതി — ആ ജുസ്‌ഇന്റെ ദിവസം ഇത്ഖാൻ അത് വീണ്ടും കാണിക്കും. മനസ്സിൽ ചുമക്കേണ്ടതില്ല.",
+ s1:"എവിടെ?",s2:"എന്ത് സംഭവിച്ചു?",s3:"എത്ര തവണ സംഭവിക്കുന്നു?",s4:"എവിടെ വെച്ചാണ് ശ്രദ്ധിച്ചത്?",s5:"ചെറിയ കുറിപ്പ് (ആവശ്യമെങ്കിൽ)",
+ juz:"ജുസ്‌അ്",surah:"സൂറ",ayah:"ആയത്ത്",page:"പേജ്",any:"—",mixedWith:"ഏത് സ്ഥലവുമായാണ് മാറിയത്?",
+ types:{forgot:"മറന്നു / നിന്നുപോയി",mutashabih:"സമാന ആയത്തുമായി മാറി",word:"വാക്ക് മാറിപ്പോയി",skip:"വാക്കോ ആയത്തോ വിട്ടുപോയി",link:"അടുത്ത ആയത്തിലേക്കുള്ള ബന്ധം",page:"പേജിന്റെ തുടക്കം",harakah:"ഹർകത്ത് തെറ്റി",tajweed:"തജ്‌വീദ്"},
+ tips:{forgot:"ആയത്ത് മുസ്ഹഫിൽ നോക്കി മൂന്ന് തവണ ഓതുക; പിന്നെ തൊട്ടുമുമ്പുള്ള ആയത്തോട് ചേർത്ത് മനഃപാഠത്തിൽ നിന്ന് ഓതുക.",mutashabih:"രണ്ട് സ്ഥലങ്ങളും അടുത്തടുത്ത് തുറന്നുവെക്കുക. വ്യത്യാസമുള്ള ആ ഒരു വാക്ക് കണ്ടെത്തി, ഓരോ സൂറയുടെയും പശ്ചാത്തലവുമായി ബന്ധിപ്പിക്കുക.",word:"മുസ്ഹഫിൽ ആ വാക്കിന് താഴെ പെൻസിൽ കൊണ്ട് ചെറുതായി വരയ്ക്കുക; ആയത്ത് പതുക്കെ അഞ്ച് തവണ ഓതുക.",skip:"അതിന് മുമ്പും ശേഷവുമുള്ള ആയത്തുകൾ ചേർത്ത് ഓതുക; ആ പേജിലെ ആയത്തുകൾ എണ്ണി നോക്കുക.",link:"ഈ ആയത്തിന്റെ അവസാന വാക്കുകൾ അടുത്ത ആയത്തിന്റെ ആദ്യ വാക്കുകളോട് ചേർത്ത്, ഒഴുക്കോടെ വരുന്നത് വരെ ആവർത്തിക്കുക.",page:"ഓരോ പേജിന്റെയും ആദ്യ വാക്കുകൾ പഠിക്കുക — പേജ് തുറക്കുന്ന ‘താക്കോൽ’.",harakah:"ഈ ആയത്ത് ഒരേ ഖാരിഇന്റെ ശബ്ദത്തിൽ കേട്ട്, മൂന്ന് തവണ കൂടെ ഓതുക.",tajweed:"നിയമം ഉസ്താദിനോട് ചോദിച്ച് ഉറപ്പാക്കുക; പിന്നെ ഒരേ ഖാരിഇനെ കേട്ട് അനുകരിക്കുക."},
+ tipT:"എങ്ങനെ ശരിയാക്കാം",freq:{1:"ഒരിക്കൽ",2:"ഇടയ്ക്ക്",3:"പലപ്പോഴും"},where:{daily:"ദിവസേനയുള്ള റിവിഷൻ",salah:"നമസ്കാരത്തിൽ",test:"ഹൽഖ ടെസ്റ്റ്",self:"സ്വയം പരിശോധന",listen:"കേൾക്കുമ്പോൾ"},
+ ph:"ഓർക്കാൻ സഹായിക്കുന്ന എന്തെങ്കിലും…",save:"ഈ സ്ഥലം സേവ് ചെയ്യുക",saved:"സേവ് ചെയ്തു — ആ ജുസ്‌ഇന്റെ ദിവസം ഇത് കാണിക്കും",
+ listT:"നിങ്ങളുടെ കുറിപ്പുകൾ",open:"ബാക്കി",fixed:"ശരിയായവ",all:"എല്ലാം",allJuz:"എല്ലാ ജുസ്‌ഉം",reviewed:"ഞാൻ നോക്കി",markFixed:"ശരിയായി",reopen:"വീണ്ടും തുറക്കുക",del:"ഒഴിവാക്കുക",confirm:"ഒഴിവാക്കാൻ വീണ്ടും തൊടുക",
+ revCount:(n,d)=>n+" തവണ നോക്കി"+(d?" · അവസാനം "+d:""),none:"ഇവിടെ ഒന്നുമില്ല. ഒരു സ്ഥലം തടയുമ്പോൾ മുകളിൽ കുറിച്ചാൽ മതി.",
+ before:"ഇന്ന് തുടങ്ങുന്നതിന് മുമ്പ്",beforeD:n=>"ഇന്നത്തെ പേജുകളിൽ "+n+" കുറിപ്പ് ഉണ്ട്. ആദ്യം അത് ഒന്ന് നോക്കുക.",see:"കാണുക"},
+ backTo:"ഇന്ന്",closeL:"അടയ്ക്കുക",
+ secs:[["ജുസ്‌അ് മാപ്പ്","ഓരോ ജുസ്‌ഇന്റെയും ഊഴം എപ്പോൾ"],["ടെസ്റ്റ് പ്ലാൻ","ഹൽഖക്ക് ശാന്തമായ തയ്യാറെടുപ്പ്"],["തെറ്റുന്ന സ്ഥലങ്ങൾ","തടയുന്ന ഇടങ്ങളുടെ കുറിപ്പ്"],["ഹൃദയം","സലഫിന്റെ വഴി, ദുആ, ശാന്തത"]],splashTag:"ഖുർആൻ സൗമ്യമായി, ദിനംപ്രതി കാത്തുസൂക്ഷിക്കാൻ",
+ bIn:"ശ്വാസം ഉള്ളിലേക്ക്",bHold:"പിടിച്ചുവെക്കുക",bOut:"പതുക്കെ പുറത്തേക്ക്",bStart:"തുടങ്ങാം",bBegin:"ശ്വസനം തുടങ്ങുക",bStop:"നിർത്തുക",bEnd:"അൽഹംദുലില്ലാഹ്"
+}};
+
+// short daily reminders, all from the Quran and authentic Sunnah
+const REM={en:[
+ ["The most beloved deeds to Allah are those done consistently, even if they are small.","Bukhari & Muslim"],
+ ["The companion of the Quran is like the owner of hobbled camels: if he tends to them, he keeps them.","Bukhari & Muslim"],
+ ["The one who recites while stumbling and finding it hard has two rewards.","Bukhari & Muslim"],
+ ["“And We have certainly made the Quran easy to remember.”","Al-Qamar 54:17"],
+ ["Recite the Quran while your hearts are at one with it; when you feel weary, get up and rest.","Bukhari & Muslim"],
+ ["The Prophet ﷺ taught us to say “I was made to forget,” not to blame ourselves harshly.","Bukhari & Muslim"],
+ ["“Verily, in the remembrance of Allah do hearts find rest.”","Ar-Ra‘d 13:28"]],
+ml:[
+ ["അല്ലാഹുവിന് ഏറ്റവും ഇഷ്ടപ്പെട്ട കർമ്മങ്ങൾ കുറവാണെങ്കിലും സ്ഥിരമായി ചെയ്യുന്നവയാണ്.","ബുഖാരി, മുസ്‌ലിം"],
+ ["ഖുർആനിന്റെ കൂട്ടുകാരൻ കെട്ടിയിട്ട ഒട്ടകങ്ങളുടെ ഉടമയെപ്പോലെയാണ്: ശ്രദ്ധിച്ചുകൊണ്ടിരുന്നാൽ അവ കൂടെയുണ്ടാകും.","ബുഖാരി, മുസ്‌ലിം"],
+ ["പ്രയാസപ്പെട്ട്, തടഞ്ഞുതടഞ്ഞ് ഓതുന്നവന് രണ്ട് പ്രതിഫലമുണ്ട്.","ബുഖാരി, മുസ്‌ലിം"],
+ ["“ഖുർആനിനെ നാം ഓർമ്മിക്കാൻ എളുപ്പമാക്കിയിരിക്കുന്നു.”","അൽ-ഖമർ 54:17"],
+ ["ഹൃദയം ഇണങ്ങിനിൽക്കുന്നിടത്തോളം ഖുർആൻ ഓതുക; ക്ഷീണം തോന്നിയാൽ എഴുന്നേറ്റ് വിശ്രമിക്കുക.","ബുഖാരി, മുസ്‌ലിം"],
+ ["“ഞാൻ മറന്നു” എന്നല്ല, “എന്നെ മറപ്പിക്കപ്പെട്ടു” എന്ന് പറയാൻ നബി ﷺ പഠിപ്പിച്ചു — സ്വയം കുറ്റപ്പെടുത്താതെ.","ബുഖാരി, മുസ്‌ലിം"],
+ ["“അറിയുക, അല്ലാഹുവിന്റെ സ്മരണ കൊണ്ടാണ് ഹൃദയങ്ങൾ ശാന്തമാകുന്നത്.”","അർ-റഅ്ദ് 13:28"]]};
+
+const HEART={en:`
+<div class="card orn"><p class="ar" style="margin:0">وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ فَهَلْ مِن مُّدَّكِرٍ</p>
+<p style="text-align:center">“And We have certainly made the Quran easy to remember. So is there anyone who will be mindful?”</p>
+<span class="src" style="text-align:center">Al-Qamar 54:17 — Allah repeats it four times in this surah (17, 22, 32, 40)</span></div>
+<div class="card"><h2>The way of the Salaf</h2><p class="muted">Itqan is built on how the Prophet ﷺ and his Companions kept the Quran.</p>
+<div class="item"><b>Tend it, and it stays</b>The Prophet ﷺ likened the companion of the Quran to the owner of hobbled camels: if he keeps watch over them, he keeps them. In Muslim's narration: when he stands reciting it night and day, he remembers it.<span class="src">Bukhari & Muslim · this is the daily portion and the sittings in your prayers</span></div>
+<div class="item"><b>A khatm a month, or a week</b>The Prophet ﷺ advised ‘Abdullah ibn ‘Amr to complete the Quran in a month, and when he asked for more, in seven days.<span class="src">Bukhari · the “Steady” and “Seven ahzab” paces</span></div>
+<div class="item"><b>The seven ahzab</b>The Companions divided the Quran into seven portions for the week: 3 surahs, then 5, 7, 9, 11, 13, and then the Mufassal from Qaf to the end.<span class="src">Reported by Abu Dawud from Aws ibn Hudhayfah · the “Seven ahzab” pace follows this division</span></div>
+<div class="item"><b>Small and constant</b>The most beloved deeds to Allah are the most consistent, even if small.<span class="src">Bukhari & Muslim · why missed days never double up</span></div>
+<div class="item"><b>Stop when the heart is weary</b>“Recite the Quran as long as your hearts are at one with it; when you differ, get up from it.”<span class="src">Bukhari & Muslim, from Jundub · rest is part of the Sunnah</span></div></div>
+<div class="card"><h2>When a verse slips</h2>
+<div class="item"><b>It happened to the best of creation</b>The Prophet ﷺ heard a man reciting at night and said: “May Allah have mercy on him; he reminded me of verses I had been made to forget.” A moment of forgetting is human.<span class="src">Bukhari 5038 & Muslim</span></div>
+<div class="item"><b>Gentle words to yourself</b>He ﷺ taught us not to say “I forgot such-and-such verse,” but rather “I was made to forget.”<span class="src">Bukhari & Muslim</span></div>
+<div class="item"><b>Effort is what is asked</b>Scholars explain that the blame is on the one who neglects and abandons the Quran; whoever keeps revising regularly is not blameworthy for what slips despite effort. Several narrations threatening those who forget were graded weak by Imam at-Tirmidhi, Imam al-Bukhari and Ibn Hajar. For your own situation, ask your teacher.<span class="src">Fath al-Bari; fatwas of scholars</span></div>
+<div class="item"><b>Two rewards</b>The one skilled in the Quran is with the noble, righteous scribes, and the one who recites it stumbling, finding it hard, has two rewards.<span class="src">Bukhari & Muslim</span></div></div>
+<div class="card"><h2>A calm heart before reciting</h2><p class="muted">Breathe with the circle for a minute before a test or a long revision: in for 4, hold for 4, out for 6.</p>
+<div class="breath" id="breath"><b id="bTxt"></b></div><div class="row" style="justify-content:center"><button class="btn pri" id="bBtn"></button></div></div>
+<div class="card"><h2>Helpers for revision today</h2>
+<div class="item"><b>Recite in salah</b>Recite today's pages in your Sunnah and night prayers. This is the strongest revision of all.</div>
+<div class="item"><b>Use one mushaf</b>Revise from the same Madinah mushaf every time, so each page's picture stays fixed in your memory.</div>
+<div class="item"><b>Listen to one reciter</b>Play today's juz from one reciter, for example Sheikh Al-Husary, on Quran.com while cooking or travelling. It's an extra, not a replacement.</div>
+<div class="item"><b>Self-test privately with Tarteel</b>Hide the verses and recite; the app's AI marks missed or wrong words, and nobody else hears. Mistake detection is a paid feature with a free trial.</div>
+<div class="item"><b>Recite one page a week to someone you trust</b>No marks and no pressure. Small, friendly practice makes the halaqah test feel familiar.</div></div>
+<div class="card"><h2>Duas</h2>
+<p class="ar">رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي ۝ وَاحْلُلْ عُقْدَةً مِّن لِّسَانِي ۝ يَفْقَهُوا قَوْلِي</p>
+<p class="muted">“My Lord, expand my chest, ease my task, and untie the knot from my tongue so they understand my speech.” (Ta-Ha 20:25–28)</p>
+<p class="ar">رَّبِّ زِدْنِي عِلْمًا</p><p class="muted">“My Lord, increase me in knowledge.” (Ta-Ha 20:114)</p></div>
+<div class="card"><h2>Look after yourself</h2><p>Sleep early before a test, drink water, take a short walk. Don't start heavy new revision on the last day. Recite slowly, since speed causes most slips. If you stop, pause, breathe once and continue. If revision ever feels heavy, rest and come back later. The Quran is a mercy, never a burden.</p></div>`,
+ml:`
+<div class="card orn"><p class="ar" style="margin:0">وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ فَهَلْ مِن مُّدَّكِرٍ</p>
+<p style="text-align:center">“തീർച്ചയായും ഖുർആനിനെ നാം ഓർമ്മിക്കാനായി എളുപ്പമാക്കിയിരിക്കുന്നു. അപ്പോൾ ഓർമ്മിച്ചു ചിന്തിക്കുന്ന ആരെങ്കിലുമുണ്ടോ?”</p>
+<span class="src" style="text-align:center">അൽ-ഖമർ 54:17 — ഈ സൂറയിൽ അല്ലാഹു ഇത് നാല് തവണ ആവർത്തിക്കുന്നു (17, 22, 32, 40)</span></div>
+<div class="card"><h2>സലഫിന്റെ വഴി</h2><p class="muted">നബി ﷺ-യും സ്വഹാബികളും ഖുർആൻ കാത്തുസൂക്ഷിച്ച രീതിയിലാണ് ഇത്ഖാൻ നിർമ്മിച്ചിരിക്കുന്നത്.</p>
+<div class="item"><b>ശ്രദ്ധിച്ചാൽ കൂടെ നിൽക്കും</b>ഖുർആനിന്റെ കൂട്ടുകാരനെ നബി ﷺ കെട്ടിയിട്ട ഒട്ടകങ്ങളുടെ ഉടമയോട് ഉപമിച്ചു: ശ്രദ്ധിച്ചുകൊണ്ടിരുന്നാൽ അവ കൂടെ നിൽക്കും. മുസ്‌ലിമിന്റെ റിപ്പോർട്ടിൽ: രാത്രിയും പകലും നിന്ന് ഓതിക്കൊണ്ടിരുന്നാൽ അവന് അത് ഓർമ്മയുണ്ടാകും.<span class="src">ബുഖാരി, മുസ്‌ലിം · ദിവസേനയുള്ള ഭാഗവും നമസ്കാരത്തിലെ ഇരുത്തങ്ങളും ഇതാണ്</span></div>
+<div class="item"><b>മാസത്തിൽ ഒരു ഖത്മ്, അല്ലെങ്കിൽ ആഴ്ചയിൽ</b>അബ്ദുല്ലാഹിബ്നു അംറിനോട് മാസത്തിൽ ഒരു ഖത്മ് പൂർത്തിയാക്കാൻ നബി ﷺ ഉപദേശിച്ചു; കൂടുതൽ കഴിയുമെന്ന് പറഞ്ഞപ്പോൾ ഏഴ് ദിവസത്തിൽ.<span class="src">ബുഖാരി · “സ്ഥിരം”, “ഏഴ് ഹിസ്ബ്” എന്നീ അളവുകൾ</span></div>
+<div class="item"><b>ഏഴ് ഹിസ്ബുകൾ</b>സ്വഹാബികൾ ഖുർആനിനെ ആഴ്ചയിലേക്ക് ഏഴ് ഭാഗങ്ങളാക്കി: 3 സൂറ, പിന്നെ 5, 7, 9, 11, 13, പിന്നെ ഖാഫ് മുതൽ അവസാനം വരെയുള്ള മുഫസ്സൽ.<span class="src">അബൂദാവൂദ്, ഔസ് ബ്നു ഹുദൈഫയിൽ നിന്ന് · “ഏഴ് ഹിസ്ബ്” അളവ് ഈ വിഭജനം പിന്തുടരുന്നു</span></div>
+<div class="item"><b>കുറച്ച്, പക്ഷേ സ്ഥിരമായി</b>അല്ലാഹുവിന് ഏറ്റവും ഇഷ്ടപ്പെട്ട കർമ്മങ്ങൾ കുറവാണെങ്കിലും സ്ഥിരമായി ചെയ്യുന്നവയാണ്.<span class="src">ബുഖാരി, മുസ്‌ലിം · അതുകൊണ്ടാണ് മുടങ്ങിയ ദിവസങ്ങൾ ഇരട്ടിയാക്കാത്തത്</span></div>
+<div class="item"><b>ഹൃദയം ക്ഷീണിച്ചാൽ നിർത്തുക</b>“ഹൃദയങ്ങൾ ഇണങ്ങിനിൽക്കുന്നിടത്തോളം ഖുർആൻ ഓതുക; ഭിന്നത തോന്നിയാൽ അതിൽ നിന്ന് എഴുന്നേൽക്കുക.”<span class="src">ബുഖാരി, മുസ്‌ലിം, ജുന്ദുബിൽ നിന്ന് · വിശ്രമവും സുന്നത്തിന്റെ ഭാഗമാണ്</span></div></div>
+<div class="card"><h2>ഒരു ആയത്ത് മറന്നുപോകുമ്പോൾ</h2>
+<div class="item"><b>സൃഷ്ടികളിൽ ഏറ്റവും ഉത്തമർക്കും സംഭവിച്ചു</b>രാത്രി ഒരാൾ ഓതുന്നത് കേട്ട് നബി ﷺ പറഞ്ഞു: “അല്ലാഹു അദ്ദേഹത്തിന് കരുണ ചെയ്യട്ടെ; എനിക്ക് മറപ്പിക്കപ്പെട്ടിരുന്ന ആയത്തുകൾ അദ്ദേഹം എന്നെ ഓർമ്മിപ്പിച്ചു.” ഒരു നിമിഷത്തെ മറവി മനുഷ്യസഹജമാണ്.<span class="src">ബുഖാരി 5038, മുസ്‌ലിം</span></div>
+<div class="item"><b>സ്വയം സൗമ്യമായി സംസാരിക്കുക</b>“ഞാൻ ഇന്ന ആയത്ത് മറന്നു” എന്നല്ല, “എന്നെ മറപ്പിക്കപ്പെട്ടു” എന്ന് പറയാൻ നബി ﷺ പഠിപ്പിച്ചു.<span class="src">ബുഖാരി, മുസ്‌ലിം</span></div>
+<div class="item"><b>ആവശ്യപ്പെടുന്നത് പരിശ്രമമാണ്</b>ഖുർആനിനെ അവഗണിച്ച് ഉപേക്ഷിക്കുന്നവർക്കാണ് ആക്ഷേപം എന്ന് പണ്ഡിതന്മാർ വിശദീകരിക്കുന്നു; പതിവായി റിവൈസ് ചെയ്യുന്നവർ, പരിശ്രമിച്ചിട്ടും മറന്നുപോകുന്നതിന് കുറ്റക്കാരല്ല. മറക്കുന്നവർക്കുള്ള താക്കീതുള്ള ചില റിപ്പോർട്ടുകൾ ഇമാം തിർമിദി, ഇമാം ബുഖാരി, ഇബ്നു ഹജർ എന്നിവർ ദുർബലമായി കണക്കാക്കിയിട്ടുണ്ട്. സ്വന്തം കാര്യത്തിൽ നിങ്ങളുടെ ഉസ്താദിനോട് ചോദിക്കുക.<span class="src">ഫത്ഹുൽ ബാരി; പണ്ഡിതന്മാരുടെ ഫത്‌വകൾ</span></div>
+<div class="item"><b>രണ്ട് പ്രതിഫലം</b>ഖുർആനിൽ പ്രാവീണ്യമുള്ളവൻ ആദരണീയരും പുണ്യവാന്മാരുമായ മലക്കുകളോടൊപ്പമാണ്; പ്രയാസപ്പെട്ട്, തടഞ്ഞുതടഞ്ഞ് ഓതുന്നവന് രണ്ട് പ്രതിഫലമുണ്ട്.<span class="src">ബുഖാരി, മുസ്‌ലിം</span></div></div>
+<div class="card"><h2>ഓതുന്നതിന് മുമ്പ് ശാന്തമായ ഹൃദയം</h2><p class="muted">ടെസ്റ്റിനോ നീണ്ട റിവിഷനോ മുമ്പ് ഒരു മിനിറ്റ് വൃത്തത്തോടൊപ്പം ശ്വസിക്കുക: 4 ഉള്ളിലേക്ക്, 4 പിടിച്ചുവെക്കുക, 6 പുറത്തേക്ക്.</p>
+<div class="breath" id="breath"><b id="bTxt"></b></div><div class="row" style="justify-content:center"><button class="btn pri" id="bBtn"></button></div></div>
+<div class="card"><h2>ഇന്നത്തെ റിവിഷന് സഹായികൾ</h2>
+<div class="item"><b>നമസ്കാരത്തിൽ ഓതുക</b>ഇന്നത്തെ പേജുകൾ സുന്നത്ത് നമസ്കാരങ്ങളിലും രാത്രി നമസ്കാരത്തിലും ഓതുക. ഏറ്റവും ശക്തമായ റിവിഷൻ ഇതാണ്.</div>
+<div class="item"><b>ഒരേ മുസ്ഹഫ് മാത്രം</b>എപ്പോഴും ഒരേ മദീന മുസ്ഹഫിൽ നിന്ന് റിവൈസ് ചെയ്യുക; ഓരോ പേജിന്റെയും ചിത്രം മനസ്സിൽ ഉറച്ചുനിൽക്കും.</div>
+<div class="item"><b>ഒരേ ഖാരിഇനെ കേൾക്കുക</b>ഇന്നത്തെ ജുസ്‌അ് ഒരേ ഖാരിഇന്റെ (ഉദാ: ശൈഖ് അൽ-ഹുസരി) ശബ്ദത്തിൽ Quran.com-ൽ പാചകം ചെയ്യുമ്പോഴോ യാത്രയിലോ കേൾക്കുക. ഇത് അധിക സഹായം മാത്രം, ഓതലിന് പകരമല്ല.</div>
+<div class="item"><b>Tarteel ആപ്പിൽ സ്വകാര്യ പരീക്ഷ</b>ആയത്തുകൾ മറച്ച് ഓതുക; വിട്ടുപോയതോ തെറ്റിയതോ ആയ വാക്കുകൾ ആപ്പിലെ AI കാണിച്ചുതരും, മറ്റാരും കേൾക്കില്ല. ഈ ഫീച്ചർ പണം നൽകി ഉപയോഗിക്കേണ്ടതാണ്; സൗജന്യ ട്രയൽ ഉണ്ട്.</div>
+<div class="item"><b>ആഴ്ചയിൽ ഒരു പേജ് വിശ്വസ്തനായ ഒരാളെ കേൾപ്പിക്കുക</b>മാർക്കില്ല, സമ്മർദ്ദമില്ല. ചെറിയ സൗഹൃദ പരിശീലനങ്ങൾ ഹൽഖയിലെ ടെസ്റ്റിനെ പരിചിതമാക്കും.</div></div>
+<div class="card"><h2>ദുആകൾ</h2>
+<p class="ar">رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي ۝ وَاحْلُلْ عُقْدَةً مِّن لِّسَانِي ۝ يَفْقَهُوا قَوْلِي</p>
+<p class="muted">“എന്റെ രക്ഷിതാവേ, എന്റെ ഹൃദയം വിശാലമാക്കിത്തരേണമേ, എന്റെ കാര്യം എളുപ്പമാക്കിത്തരേണമേ, എന്റെ നാവിലെ കെട്ട് അഴിച്ചുതരേണമേ, അവർ എന്റെ സംസാരം മനസ്സിലാക്കാൻ.” (ത്വാഹ 20:25–28)</p>
+<p class="ar">رَّبِّ زِدْنِي عِلْمًا</p><p class="muted">“എന്റെ രക്ഷിതാവേ, എനിക്ക് അറിവ് വർദ്ധിപ്പിച്ചുതരേണമേ.” (ത്വാഹ 20:114)</p></div>
+<div class="card"><h2>സ്വന്തം ശ്രദ്ധയും</h2><p>ടെസ്റ്റിന് മുമ്പ് നേരത്തെ ഉറങ്ങുക, വെള്ളം കുടിക്കുക, ഒന്ന് നടക്കുക. അവസാന ദിവസം പുതിയ ഭാരിച്ച റിവിഷൻ തുടങ്ങരുത്. പതുക്കെ ഓതുക — മിക്ക തെറ്റുകളും വേഗത കൊണ്ടാണ്. നിന്നുപോയാൽ ഒന്ന് നിർത്തി, ഒരു ശ്വാസമെടുത്ത് തുടരുക. റിവിഷൻ ഭാരമായി തോന്നിയാൽ വിശ്രമിക്കുക, പിന്നെ തിരിച്ചുവരിക. ഖുർആൻ റഹ്മത്താണ്, ഭാരമല്ല.</p></div>`};
+
+// ---------- state ----------
+const blank=()=>({v:1,name:"",pace:20,sit:3,pos:1,cycle:1,khatms:0,juz:{},log:{},checks:{},notes:[],test:null,tdone:{},saved:0});
+let st=blank(),view="today",ref=null,writing=false,pending=false;
+let lang="en";try{lang=localStorage.getItem("itqan-lang")||((navigator.language||"").startsWith("ml")?"ml":"en")}catch(e){}
+const t=k=>W[lang][k];
+try{const l=localStorage.getItem("itqan");if(l)st=Object.assign(blank(),JSON.parse(l))}catch(e){}
+if(st.pace===87)st.pace="h";
+function save(){st.saved=Date.now();try{localStorage.setItem("itqan",JSON.stringify(st))}catch(e){}push()}
+async function push(){if(!ref)return;if(writing){pending=true;return}writing=true;
+  try{await ref.set({json:JSON.stringify(st),saved:st.saved})}catch(e){}
+  writing=false;if(pending){pending=false;push()}}
+(async()=>{try{if(!window.claude||!claude.use)return;const db=await claude.use("db");const u=await claude.use("user");if(!db||!u)return;
+  const id=await u.id();if(!id)return;ref=db.collection("data/users/"+id).doc("state");
+  const r=await ref.get();const d=r&&(typeof r.data==="function"?r.data():(r.data!==undefined?r.data:r));
+  if(d&&d.json){const remote=JSON.parse(d.json);if((remote.saved||0)>(st.saved||0)){st=Object.assign(blank(),remote);if(st.pace===87)st.pace="h";try{localStorage.setItem("itqan",JSON.stringify(st))}catch(e){}render();if(st.onboarded&&$("ob"))$("ob").remove()}else push()}else push();
+}catch(e){}})();
+
+function toast(m){const e=$("toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2400)}
+
+// ---------- plan logic ----------
+function portion(){const from=st.pos;let to;if(st.pace==="h"){const nx=HZ.find(x=>x>from);to=(nx||605)-1}else to=Math.min(604,from+st.pace-1);
+  const n=to-from+1,k=Math.min(st.sit,n),parts=[];let p=from;for(let i=0;i<k;i++){const len=Math.round((n-(p-from))/(k-i));parts.push([p,p+len-1]);p+=len}return{from,to,parts}}
+const jl=(a,b)=>{const ja=juzOf(a),jb=juzOf(b);return t("juz")+" "+(ja===jb?ja:ja+"–"+jb)};
+const range=(a,b)=>jl(a,b)+" · "+t("pr")(a,b);
+const sitName=(i,k)=>k===1?t("sit1"):k===2?t("sit2")[i]:t("sit3")[i];
+function boost(skip){const score={w:0,m:1},c=[];for(let j=1;j<=30;j++){if(skip.includes(j))continue;const x=st.juz[j];if(x&&score[x.r]!==undefined)c.push([score[x.r],x.d||"",j])}
+  c.sort((a,b)=>a[0]-b[0]||(a[1]<b[1]?-1:1));if(!c.length)return null;const j=c[0][2],h=(st.juz[j].c||0)%2,mid=Math.floor((S[j-1]+jEnd(j))/2);
+  return{j,a:h?mid+1:S[j-1],b:h?jEnd(j):mid}}
+function testPlan(){const te=st.test;if(!te||!te.date||!te.juz.length)return[];const today=T(),n=diff(today,te.date);if(n<0)return[];
+  const out=[],J=te.juz.slice().sort((a,b)=>a-b),work=Math.max(0,n-1),k=work?Math.ceil(J.length/work):0,names=l=>l.map(j=>t("juz")+" "+j).join(", ");
+  for(let d=0;d<work;d++){const list=[];for(let i=0;i<k;i++){const j=J[(d*k+i)%J.length];if(!list.includes(j))list.push(j)}out.push({k:addDays(today,d),txt:t("rev")(names(list))})}
+  if(n>=1)out.push({k:addDays(today,n-1),txt:t("light")(names(J))});
+  out.push({k:te.date,txt:t("testDay")});return out}
+
+function ringSVG(){const R=124,r=94,cx=150,cy=150,cur=juzOf(st.pos);let s="";
+  for(let j=1;j<=30;j++){const a0=(j-1)/30*2*Math.PI-Math.PI/2+.013,a1=j/30*2*Math.PI-Math.PI/2-.013;
+    const P=(rad,a)=>(cx+rad*Math.cos(a)).toFixed(1)+" "+(cy+rad*Math.sin(a)).toFixed(1);
+    const fill=jEnd(j)<st.pos?"var(--teal)":j===cur?"var(--gold)":"var(--empty)";
+    s+=`<path d="M${P(R,a0)} A${R} ${R} 0 0 1 ${P(R,a1)} L${P(r,a1)} A${r} ${r} 0 0 0 ${P(r,a0)}Z" fill="${fill}"/>`}
+  const pct=Math.round((st.pos-1)/604*100);
+  return`<svg class="ring" viewBox="0 0 300 300" role="img" aria-label="${pct}%">${s}
+  <g transform="translate(150 150)" fill="none" stroke="var(--gold)" stroke-opacity=".35"><rect x="-74" y="-74" width="148" height="148" rx="4" transform="rotate(45)"/><rect x="-74" y="-74" width="148" height="148" rx="4"/></g>
+  <text x="150" y="124" text-anchor="middle" font-size="14" opacity=".7">${t("khatm")} ${st.cycle}</text>
+  <text x="150" y="164" text-anchor="middle" font-size="36" font-weight="700">${t("juz")} ${cur}</text>
+  <text x="150" y="190" text-anchor="middle" font-size="13" opacity=".7">${t("ofCycle")(pct)}</text></svg>`}
+
+// ---------- views ----------
+function rToday(){const today=T(),L=st.log[today],out=[];
+  const last=Object.keys(st.log).filter(k=>st.log[k].done&&k<today).sort().pop();
+  out.push(`<div class="card hero"><div class="ringwrap">${ringSVG()}</div><p class="ar motto">وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ</p><p class="muted" style="text-align:center;margin:0">${t("motto")}</p></div>`);
+  const secHTML=`<div class="sec-grid">${["map","test","notes","heart"].map((v,i)=>`<button class="sec c${i+1}" data-tab="${v}"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONS[i+1]}</svg></span><span><b>${t("secs")[i][0]}</b><small>${t("secs")[i][1]}</small></span></button>`).join("")}</div>`;
+  if(last&&diff(last,today)>2&&!L)out.push(`<div class="card"><b>${t("wb")}</b> <span class="muted">${t("wb2")}</span></div>`);
+  const hzLabel=(a)=>st.pace==="h"?`<span class="pill">${t("hizb")} ${hizbOf(a)} · ${t("hz")[hizbOf(a)-1]}</span> `:"";
+  if(L&&L.done){const p=portion();
+    out.push(`<div class="card orn done-card"><svg class="star" viewBox="-50 -50 100 100" aria-hidden="true"><g fill="var(--gold)"><rect x="-30" y="-30" width="60" height="60"/><rect x="-30" y="-30" width="60" height="60" transform="rotate(45)"/></g><circle r="14" fill="var(--goldbg)"/></svg>
+    <h2>${t("done")}</h2><p class="muted">${range(L.from,L.to)} · ${t("felt")}: ${t("feel")[L.feel]}</p><p>${t("tomorrow")}: <b>${range(p.from,p.to)}</b></p><button class="btn ghost" data-act="undo">${t("undo")}</button></div>`)}
+  else{const p=portion(),ch=st.checks[today]||[];
+    out.push(`<div class="card"><h2>${t("today")}</h2><p class="muted">${hzLabel(p.from)}${range(p.from,p.to)} · ${t("pages")(p.to-p.from+1)}</p>`+
+    p.parts.map((x,i)=>`<button class="chk${ch.includes(i)?" on":""}" data-sit="${i}"><i class="box"></i><div><b>${sitName(i,p.parts.length)}</b><span>${range(x[0],x[1])}</span></div></button>`).join("")+
+    (ch.length>=p.parts.length?`<p style="margin:16px 0 0"><b>${t("how")}</b></p><div class="feel">${["s","m","w"].map(k=>`<button data-feel="${k}"><i class="${k}"></i>${t("feel")[k]}</button>`).join("")}</div>`
+    :`<div class="calmline"><b>${t("all1")}</b> ${t("all2")}</div>`)+`</div>`)}
+  if(!(L&&L.done)){const p=portion(),js=[];for(let j=juzOf(p.from);j<=juzOf(p.to);j++)js.push(j);
+    const ns=st.notes.filter(n=>!n.f&&js.includes(n.j)&&(!n.p||(+n.p>=p.from&&+n.p<=p.to)));
+    if(ns.length)out.push(`<div class="card orn"><span class="pill">${t("nt").before}</span><p style="margin:10px 0 6px">${t("nt").beforeD(ns.length)}</p>${ns.slice(0,3).map(n=>`<p style="margin:4px 0"><b>${esc(placeOf(n))}</b>${n.ty?` <span class="muted">· ${t("nt").types[n.ty]}</span>`:""}</p>`).join("")}<button class="btn" data-seejuz="${js[0]}" style="margin-top:8px">${t("nt").see}</button></div>`)}
+  const pl=testPlan(),tt=pl.find(x=>x.k===today);
+  if(tt)out.push(`<div class="card"><span class="pill">${t("testPill")(fmt(st.test.date))}</span><button class="chk${st.tdone[today]?" on":""}" data-tdone="1"><i class="box"></i><div><b>${esc(tt.txt)}</b><span>${t("testToday")}</span></div></button></div>`);
+  else{const p=L&&L.done?{from:L.from,to:L.to}:portion(),skip=[];for(let j=juzOf(p.from);j<=juzOf(p.to);j++)skip.push(j);const b=boost(skip);
+    if(b){const dn=L&&L.boost===b.j;out.push(`<div class="card"><h2>${t("str")}</h2><p class="muted">${t("strSub")}</p><button class="chk${dn?" on":""}" data-boost="${b.j}"><i class="box"></i><div><b>${t("juz")} ${b.j} · ${t("pr")(b.a,b.b)}</b><span>${t("strHow")}</span></div></button></div>`)}}
+  const doy=Math.floor((new Date(today+"T12:00")-new Date(today.slice(0,4)+"-01-01T12:00"))/864e5),rm=REM[lang][doy%REM[lang].length];
+  out.push(secHTML);out.push(`<div class="card"><span class="pill">${t("fromSunnah")}</span><p style="margin:10px 0 0">${rm[0]}</p><span class="src">${rm[1]}</span></div>`);
+  const dots=[];for(let i=29;i>=0;i--){const k=addDays(today,-i);dots.push(`<i class="${st.log[k]&&st.log[k].done?"on":""}${i===0?" t":""}" title="${fmt(k)}"></i>`)}
+  const days=Object.values(st.log).filter(x=>x.done).length;let week=0;for(let i=0;i<7;i++){const x=st.log[addDays(today,-i)];if(x&&x.done)week++}
+  out.push(`<div class="card"><div class="stats"><div><b>${st.khatms}</b><span>${t("st")[0]}</span></div><div><b>${days}</b><span>${t("st")[1]}</span></div><div><b>${week}</b><span>${t("st")[2]}</span></div></div><p class="muted" style="margin:14px 0 0">${t("last30")}</p><div class="dots">${dots.join("")}</div></div>`);
+  $("v-today").innerHTML=out.join("")}
+
+function rMap(){const cur=juzOf(st.pos),today=T();let g="";
+  for(let j=1;j<=30;j++){const x=st.juz[j],r=x&&x.r?x.r:"u",ago=x&&x.d?diff(x.d,today):null;
+    g+=`<button class="tile ${r}${nextTurn(j)===0?" cur":""}" data-juz="${j}" aria-label="${t("juz")} ${j}">${j}<small>${t("nextIn")(nextTurn(j))}</small></button>`}
+  const cnt=k=>Object.values(st.juz).filter(x=>x.r===k).length,lg=t("leg");
+  $("v-map").innerHTML=backBar()+`<div class="card hero"><h2>${t("mapT")}</h2><p class="muted">${t("mapD2")}</p>
+  <div class="legend"><span><i class="s"></i>${lg.s} ${cnt("s")}</span><span><i class="m"></i>${lg.m} ${cnt("m")}</span><span><i class="w"></i>${lg.w} ${cnt("w")}</span><span><i class="u"></i>${lg.u}</span></div>
+  <div class="grid">${g}</div></div><div class="card"><b>${t("helpT")}</b><p class="muted" style="margin:6px 0 0">${t("helpD")}</p></div>`}
+
+function rTest(){const te=st.test||{date:"",juz:[]},pl=testPlan(),today=T();
+  let tiles="";for(let j=1;j<=30;j++)tiles+=`<button class="tile ${te.juz.includes(j)?"s cur":"u"}" data-tj="${j}" aria-pressed="${te.juz.includes(j)}">${j}</button>`;
+  $("v-test").innerHTML=backBar()+`<div class="card hero"><h2>${t("testT")}</h2><p class="muted">${t("testD")}</p>
+  <label class="field"><span>${t("tDate")}${te.date?" · "+fmt(te.date):""}</span><input type="date" id="tDate" value="${esc(te.date)}" min="${today}"></label>
+  <div class="field"><span>${t("tSel")(te.juz.length)}</span><div class="grid">${tiles}</div></div>
+  <div class="row" style="justify-content:space-between"><button class="btn" data-tab="heart">${t("calmBtn")}</button>${st.test?`<button class="btn ghost" data-act="cleartest">${t("tClear")}</button>`:""}</div></div>`+
+  (pl.length?`<div class="card"><h2>${t("planUntil")(fmt(te.date))}</h2><p class="muted">${t("planNote")}</p><ul class="plan">${pl.map(x=>`<li class="${x.k===today?"today":""}${st.tdone[x.k]&&x.k<today?" done":""}"><span class="d">${x.k===today?t("todayW"):fmt(x.k).slice(0,5)}</span><span>${esc(x.txt)}</span></li>`).join("")}</ul></div>`:"")}
+
+let nf=null,nflt={st:"open",j:0},delArm=null;
+const KC={forgot:"#c4583f",mutashabih:"#2f5d7c",word:"#b07f22",skip:"#7a4f9a",link:"#0b5a51",page:"#53716e",harakah:"#a0527a",tajweed:"#3c7d3a"};
+function nfReset(){const j=juzOf(st.pos),ss=surahsOf(j);nf={j,s:ss[0],a:0,p:"",ty:"",fq:1,wh:"daily",ms:0,ma:0,t:""}}
+const ayOpts=(s,v)=>{let o=`<option value="0">${t("nt").any}</option>`;if(s)for(let i=1;i<=SU[s-1][3];i++)o+=`<option value="${i}"${v===i?" selected":""}>${i}</option>`;return o};
+const placeOf=n=>n.s?SU[n.s-1][1]+(n.a?" "+n.s+":"+n.a:"")+" · "+SU[n.s-1][0]:t("juz")+" "+n.j;
+function rNotes(){if(!nf)nfReset();const N=t("nt");
+  let jo="";for(let j=1;j<=30;j++)jo+=`<option value="${j}"${nf.j===j?" selected":""}>${t("juz")} ${j}</option>`;
+  const so=surahsOf(nf.j).map(s=>`<option value="${s}"${nf.s===s?" selected":""}>${esc(suName(s))}</option>`).join("");
+  let allS="";for(let s=1;s<=114;s++)allS+=`<option value="${s}"${nf.ms===s?" selected":""}>${esc(suName(s))}</option>`;
+  const types=Object.keys(N.types).map(k=>`<button type="button" class="tc${nf.ty===k?" sel":""}" data-nty="${k}"><i class="k-${k}"></i>${N.types[k]}</button>`).join("");
+  const form=`<div class="card hero"><h2>${N.h1}</h2><p class="muted">${N.lead}</p>
+  <div class="step"><i>1</i>${N.s1}</div>
+  <div class="g3"><label class="field"><span>${N.juz}</span><select id="nfJ">${jo}</select></label><label class="field"><span>${N.page}</span><input id="nfP" type="number" inputmode="numeric" min="${S[nf.j-1]}" max="${jEnd(nf.j)}" placeholder="${S[nf.j-1]}–${jEnd(nf.j)}" value="${esc(nf.p)}"></label></div>
+  <div class="g3" style="margin-top:10px;grid-template-columns:minmax(0,2fr) minmax(0,1fr)"><label class="field"><span>${N.surah}</span><select id="nfS">${so}</select></label><label class="field"><span>${N.ayah}</span><select id="nfA">${ayOpts(nf.s,nf.a)}</select></label></div>
+  <div class="step"><i>2</i>${N.s2}</div><div class="tgrid">${types}</div>
+  ${nf.ty==="mutashabih"?`<p style="margin:12px 0 6px;font-weight:600;font-size:14px">${N.mixedWith}</p><div class="g3" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr)"><select id="nfMS"><option value="0">${N.any}</option>${allS}</select><select id="nfMA">${ayOpts(nf.ms,nf.ma)}</select></div>`:""}
+  ${nf.ty?`<div class="tip"><b>${N.tipT}</b>${N.tips[nf.ty]}</div>`:""}
+  <div class="step"><i>3</i>${N.s3}</div><div class="seg3">${[1,2,3].map(f=>`<button type="button" class="tc${nf.fq===f?" sel":""}" data-nfq="${f}">${N.freq[f]}</button>`).join("")}</div>
+  <div class="step"><i>4</i>${N.s4}</div><div class="wrap">${Object.keys(N.where).map(w=>`<button type="button" class="tc${nf.wh===w?" sel":""}" data-nwh="${w}">${N.where[w]}</button>`).join("")}</div>
+  <div class="step"><i>5</i>${N.s5}</div><textarea id="nfT" placeholder="${esc(N.ph)}" style="min-height:70px">${esc(nf.t)}</textarea>
+  <button class="btn pri" data-act="nsave" style="width:100%;margin-top:14px"${nf.ty?"":" disabled"}>${N.save}</button></div>`;
+  const list=st.notes.filter(n=>(nflt.st==="all"||(nflt.st==="open"?!n.f:n.f))&&(!nflt.j||n.j===nflt.j)).sort((a,b)=>a.j-b.j||(a.s||0)-(b.s||0)||(a.a||0)-(b.a||0));
+  let jf=`<option value="0">${N.allJuz}</option>`;for(let j=1;j<=30;j++){const c=st.notes.filter(n=>n.j===j&&!n.f).length;jf+=`<option value="${j}"${nflt.j===j?" selected":""}>${t("juz")} ${j}${c?" ("+c+")":""}</option>`}
+  const cards=list.map(n=>{const k=n.ty||"forgot";return`<div class="wcard${n.f?" fx":""}" style="--kc:${KC[k]}"><h3>${esc(placeOf(n))}</h3>
+    <div class="meta"><span class="tag2">${t("juz")} ${n.j}${n.p?" · p."+esc(n.p):""}</span>${n.ty?`<span class="tag2" style="color:${KC[k]}">${N.types[n.ty]}</span>`:""}${n.fq?`<span class="tag2">${N.freq[n.fq]}<span class="fdots">${[1,2,3].map(i=>`<b class="${i<=n.fq?"on":""}"></b>`).join("")}</span></span>`:""}${n.wh?`<span class="tag2">${N.where[n.wh]}</span>`:""}</div>
+    ${n.ms?`<p class="muted" style="margin:0">↔ ${esc(SU[n.ms-1][1]+(n.ma?" "+n.ms+":"+n.ma:"")+" · "+SU[n.ms-1][0])}</p>`:""}
+    ${n.t?`<p style="margin:6px 0 0;white-space:pre-wrap;overflow-wrap:anywhere">${esc(n.t)}</p>`:""}
+    ${n.ty&&!n.f?`<p class="muted" style="margin:6px 0 0;font-size:13px">${N.tips[n.ty]}</p>`:""}
+    <p class="muted" style="margin:6px 0 0;font-size:12.5px">${fmt(n.d)}${n.rv?" · "+N.revCount(n.rv,fmt(n.rd)):""}</p>
+    <div class="acts">${n.f?`<button class="btn" data-nact="open" data-id="${n.id}">${N.reopen}</button>`:`<button class="btn pri" data-nact="rev" data-id="${n.id}">${N.reviewed}</button><button class="btn" data-nact="fix" data-id="${n.id}">${N.markFixed}</button>`}<button class="btn warn" data-nact="del" data-id="${n.id}">${delArm===String(n.id)?N.confirm:N.del}</button></div></div>`}).join("");
+  $("v-notes").innerHTML=backBar()+form+`<div class="card" id="nlist"><h2>${N.listT}</h2>
+  <div class="seg3" style="margin-top:10px">${["open","fixed","all"].map(s=>`<button class="tc${nflt.st===s?" sel":""}" data-nfl="${s}">${N[s]} (${st.notes.filter(n=>s==="all"||(s==="open"?!n.f:n.f)).length})</button>`).join("")}</div>
+  <select id="nfJF" style="margin-top:10px">${jf}</select>${cards||`<p class="muted" style="margin-top:12px">${N.none}</p>`}</div>`}
+let bt=null;
+function rHeart(){if(bt){clearTimeout(bt);bt=null}$("v-heart").innerHTML=HEART[lang];
+  const cards=[...$("v-heart").querySelectorAll(".card")];cards.forEach((c,i)=>c.id="h"+i);
+  const chips=cards.map((c,i)=>{const h2=c.querySelector("h2");return`<button class="chip" data-jump="h${i}"><i></i>${h2?esc(h2.textContent):(lang==="ml"?"ആയത്ത്":"Ayah")}</button>`}).join("");
+  $("v-heart").insertAdjacentHTML("afterbegin",backBar()+`<div class="chips">${chips}</div>`);$("bTxt").textContent=t("bStart");$("bBtn").textContent=t("bBegin")}
+function breathe(){const el=$("breath"),tx=$("bTxt"),b=$("bBtn");if(bt){clearTimeout(bt);bt=null;el.className="breath";tx.textContent=t("bStart");b.textContent=t("bBegin");return}
+  b.textContent=t("bStop");let round=0;const step=ph=>{if(ph==="in"){if(round++>=5){el.className="breath";tx.textContent=t("bEnd");b.textContent=t("bBegin");bt=null;return}el.className="breath in";tx.textContent=t("bIn");bt=setTimeout(()=>step("hold"),4000)}
+    else if(ph==="hold"){el.className="breath hold";tx.textContent=t("bHold");bt=setTimeout(()=>step("out"),4000)}else{el.className="breath out";tx.textContent=t("bOut");bt=setTimeout(()=>step("in"),6000)}};step("in")}
+
+const ICONS=['<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>','<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>','<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/>','<path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/>','<path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/>'];
+const VIEWS=["today","map","test","notes","heart"];
+const HV={today:"today",map:"juzmap",test:"test",notes:"notes",heart:"heart"};
+const fromHash=()=>{const x=(location.hash||"").slice(1).replace(/-sheet$/,"");return Object.keys(HV).find(k=>HV[k]===x)||"today"};
+const backBar=()=>`<button class="back" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>${t("backTo")}</button>`;
+function stopBreath(){if(bt){clearTimeout(bt);bt=null;const el=$("breath");if(el){el.className="breath";$("bTxt").textContent=t("bStart");$("bBtn").textContent=t("bBegin")}}}
+function go(v,after){closeSheetUI();stopBreath();const same=view===v;view=v;render();if(after)setTimeout(after,30);else scrollTo(0,0);
+  if(!same||location.hash.endsWith("-sheet")){try{if(location.hash.endsWith("-sheet"))location.replace("#"+HV[v]);else location.hash=HV[v]}catch(e){}}}
+addEventListener("hashchange",()=>{const sheetOpen=$("sheet").classList.contains("open");
+  if(!location.hash.endsWith("-sheet")&&sheetOpen)closeSheetUI();
+  const v=fromHash();if(v!==view){stopBreath();view=v;render();scrollTo(0,0)}});
+function header(){document.documentElement.lang=lang;document.body.classList.toggle("ml",lang==="ml");
+  $("langBtn").textContent=lang==="ml"?"EN":"മല";$("greet").textContent=t("greet")(st.name);
+  let h="";try{h=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric"}).format(new Date())}catch(e){}
+  $("dates").textContent=(h?h+" · ":"")+fmt(T())+" · "+t("sub")}
+function render(){header();
+  $("nav").innerHTML=VIEWS.map((k,i)=>`<button data-tab="${k}"${view===k?' aria-current="page"':""}><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[i]}</svg></span>${t("tabs")[i]}</button>`).join("");
+  for(const k of VIEWS)$("v-"+k).classList.toggle("hide",k!==view);
+  if(view==="today")rToday();if(view==="map")rMap();if(view==="test")rTest();if(view==="notes")rNotes();if(view==="heart"&&!$("breath"))rHeart()}
+
+let ob={pace:20,juz:1};
+function onboard(){document.body.classList.add("lock");let el=$("ob");if(!el){el=document.createElement("div");el.id="ob";el.className="ob band";document.body.appendChild(el)}
+  let js="";for(let j=1;j<=30;j++)js+=`<option value="${j}"${ob.juz===j?" selected":""}>${t("juz")} ${j}</option>`;
+  el.innerHTML=`<div><img class="mark" src="${document.querySelector('link[rel=icon]').href}" alt=""><div class="arb">إتقان</div><h1>Itqan</h1>
+  <p class="ar" style="color:#fff;font-size:22px;margin:8px 0 0">وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ</p><p style="opacity:.88">${t("obWel")}</p>
+  <div class="pane"><p><b>${t("obLang")}</b></p><div class="seg"><button class="opt${lang==="en"?" sel":""}" data-oblang="en"><b>English</b></button><button class="opt${lang==="ml"?" sel":""}" data-oblang="ml"><b>മലയാളം</b></button></div>
+  <label class="field"><span>${t("obName")}</span><input id="obName" value="${esc(st.name)}"></label>
+  <p style="margin-top:14px"><b>${t("obPace")}</b></p>${t("paces").map(([v,l,d])=>`<button class="opt${String(ob.pace)===String(v)?" sel":""}" data-obpace="${v}"><b>${l}</b><span>${d}</span></button>`).join("")}
+  <label class="field" style="margin-top:14px"><span>${t("obStart")}</span><select id="obJuz">${js}</select></label>
+  <button class="btn pri" data-act="obgo" style="width:100%;margin-top:6px">${t("obGo")}</button><p class="muted" style="text-align:center;margin-top:8px">${t("obNote")}</p></div></div>`}
+function openSheet(h){$("sheetBody").innerHTML=`<button class="xbtn" data-act="close" aria-label="${t("closeL")}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`+h;
+  const wasOpen=$("sheet").classList.contains("open");$("sheet").classList.add("open");document.body.classList.add("lock");$("sheetBody").scrollTop=0;
+  
+  if(!wasOpen&&!location.hash.endsWith("-sheet")){try{location.hash=HV[view]+"-sheet"}catch(e){}}}
+function closeSheetUI(){$("sheet").classList.remove("open");document.body.classList.remove("lock")}
+function closeSheet(){closeSheetUI();if(location.hash.endsWith("-sheet")){try{history.back()}catch(e){}}}
+function juzSheet(j){const x=st.juz[j]||{};openSheet(`<h2>${t("juz")} ${j}</h2><p class="pill">${t("nextLong")(nextTurn(j))}</p><p class="muted">${t("pr")(S[j-1],jEnd(j))} · ${t("lastRev")} ${fmt(x.d)}${x.c?" · "+t("times")(x.c):""}</p><p><b>${t("howNow")}</b></p><div class="feel">${["s","m","w"].map(k=>`<button data-rate="${k}" data-j="${j}" class="${x.r===k?"sel":""}"><i class="${k}"></i>${t("feel")[k]}</button>`).join("")}</div><div class="row" style="margin-top:16px;justify-content:space-between"><button class="btn" data-start="${j}">${t("startHere")}</button><button class="btn ghost" data-act="close">${t("close")}</button></div>`)}
+function settings(){openSheet(`<h2>${t("setT")}</h2><label class="field"><span>${t("sName")}</span><input id="sName" value="${esc(st.name)}"></label>
+  <label class="field"><span>${t("sPace")}</span><select id="sPace">${t("paces").map(([v,l,d])=>`<option value="${v}"${String(st.pace)===String(v)?" selected":""}>${l} — ${d}</option>`).join("")}</select></label>
+  <label class="field"><span>${t("sSplit")}</span><select id="sSit">${[1,2,3].map(n=>`<option value="${n}"${st.sit===n?" selected":""}>${t("sits")(n)}</option>`).join("")}</select></label>
+  <label class="field"><span>${t("sPos")}</span><input id="sPos" type="number" inputmode="numeric" min="1" max="604" value="${st.pos}"></label>
+  <button class="btn pri" data-act="saveset">${t("save")}</button>
+  <h2 style="margin-top:24px">${t("bkT")}</h2><p class="muted">${t("bkD")}</p>
+  <button class="btn" data-act="copy">${t("copy")}</button><textarea id="sRest" placeholder="${esc(t("pastePh"))}" style="margin-top:10px"></textarea>
+  <div class="row" style="margin-top:8px;justify-content:space-between"><button class="btn" data-act="restore">${t("restore")}</button><button class="btn ghost" data-act="close">${t("close")}</button></div>`)}
+
+// ---------- actions ----------
+document.addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset,today=T();
+  if(d.oblang){ob.name=($("obName")||{}).value;lang=d.oblang;try{localStorage.setItem("itqan-lang",lang)}catch(err){}header();onboard();if(ob.name!==undefined)$("obName").value=ob.name;return}
+  if(d.obpace){ob.pace=d.obpace==="h"?"h":+d.obpace;ob.juz=+$("obJuz").value;const nm=$("obName").value;onboard();$("obName").value=nm;return}
+  if(d.act==="obgo"){st.name=$("obName").value.trim().slice(0,40);st.pace=ob.pace;st.pos=S[+$("obJuz").value-1];st.onboarded=1;save();$("ob").remove();document.body.classList.remove("lock");$("v-heart").innerHTML="";go("today");return}
+  if(b.id==="bBtn"){breathe();return}
+  if(b.id==="gear"){settings();return}
+  if(b.id==="langBtn"){stopBreath();lang=lang==="ml"?"en":"ml";try{localStorage.setItem("itqan-lang",lang)}catch(err){}$("v-heart").innerHTML="";render();return}
+  if(d.nty){nf.ty=d.nty;nf.t=$("nfT").value;rNotes();return}
+  if(d.nfq){nf.fq=+d.nfq;nf.t=$("nfT").value;rNotes();return}
+  if(d.nwh){nf.wh=d.nwh;nf.t=$("nfT").value;rNotes();return}
+  if(d.nfl){nflt.st=d.nfl;rNotes();return}
+  if(d.act==="nsave"){if(!nf.ty)return;nf.t=$("nfT").value.trim().slice(0,600);nf.p=$("nfP").value?String(+$("nfP").value):"";
+    st.notes.push({id:Date.now(),j:nf.j,s:nf.s,a:nf.a,p:nf.p,ty:nf.ty,fq:nf.fq,wh:nf.wh,ms:nf.ty==="mutashabih"?nf.ms:0,ma:nf.ty==="mutashabih"?nf.ma:0,t:nf.t,d:today,rv:0});
+    const keepJ=nf.j;nfReset();nf.j=keepJ;nf.s=surahsOf(keepJ)[0];save();nflt.st="open";rNotes();toast(t("nt").saved);$("nlist").scrollIntoView({behavior:"smooth"});return}
+  if(d.nact){const n=st.notes.find(x=>String(x.id)===d.id);if(!n)return;
+    if(d.nact==="del"){if(delArm===d.id){st.notes=st.notes.filter(x=>x!==n);delArm=null;save()}else{delArm=d.id;setTimeout(()=>{if(delArm===d.id){delArm=null;if(view==="notes")rNotes()}},4000)}rNotes();return}
+    delArm=null;if(d.nact==="rev"){n.rv=(n.rv||0)+1;n.rd=today;toast(t("tSaved"))}if(d.nact==="fix")n.f=1;if(d.nact==="open")n.f=0;save();rNotes();return}
+  if(d.seejuz){nflt={st:"open",j:+d.seejuz};go("notes",()=>{const l=$("nlist");if(l)l.scrollIntoView()});return}
+  if(d.jump){const el=$(d.jump);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});return}
+  if(d.tab){go(d.tab);return}
+  if(d.sit!==undefined){const c=st.checks[today]||(st.checks[today]=[]),i=+d.sit,x=c.indexOf(i);x<0?c.push(i):c.splice(x,1);for(const k in st.checks)if(k!==today)delete st.checks[k];save();rToday();return}
+  if(d.feel){const p=portion();for(let j=juzOf(p.from);j<=juzOf(p.to);j++){const x=st.juz[j]||{};st.juz[j]={r:d.feel,d:today,c:(x.c||0)+1}}
+    st.log[today]=Object.assign(st.log[today]||{},{done:1,from:p.from,to:p.to,feel:d.feel,pos0:st.pos});st.pos=p.to+1;
+    if(st.pos>604){st.pos=1;st.khatms++;st.cycle++;st.log[today].kh=1;toast(t("tKhatm"))}else toast(t("tSaved"));save();rToday();scrollTo(0,0);return}
+  if(d.act==="undo"){const L=st.log[today];if(L){st.pos=L.pos0;if(L.kh){st.khatms--;st.cycle--}delete st.log[today];save();rToday()}return}
+  if(d.boost){const j=+d.boost,L=st.log[today]||(st.log[today]={});const x=st.juz[j]||{};
+    if(L.boost===j)delete L.boost;else{L.boost=j;st.juz[j]=Object.assign(x,{d:today,c:(x.c||0)+1});juzSheet(j)}save();rToday();return}
+  if(d.tdone){st.tdone[today]=!st.tdone[today];save();rToday();return}
+  if(d.juz){juzSheet(+d.juz);return}
+  if(d.rate){const j=+d.j,x=st.juz[j]||{};st.juz[j]=Object.assign(x,{r:d.rate,d:x.d||today});save();closeSheet();render();toast(t("tJuz")(j));return}
+  if(d.start){st.pos=S[+d.start-1];save();go("today");toast(t("tStart")(d.start));return}
+  if(d.tj){const te=st.test||(st.test={date:"",juz:[]}),j=+d.tj,i=te.juz.indexOf(j);i<0?te.juz.push(j):te.juz.splice(i,1);save();rTest();return}
+  if(d.act==="cleartest"){st.test=null;st.tdone={};save();rTest();return}
+  if(d.fix){const n=st.notes.find(n=>String(n.id)===d.fix);if(n)n.f=!n.f;save();rNotes();return}
+  if(d.act==="close"){closeSheet();return}
+  if(d.act==="saveset"){st.name=$("sName").value.trim().slice(0,40);const v=$("sPace").value;st.pace=v==="h"?"h":+v;st.sit=+$("sSit").value;const p=+$("sPos").value;if(p>=1&&p<=604)st.pos=p;save();closeSheet();render();toast(t("tSet"));return}
+  if(d.act==="copy"){try{await navigator.clipboard.writeText(JSON.stringify(st));toast(t("tCopied"))}catch(err){$("sRest").value=JSON.stringify(st);toast(t("tSelect"))}return}
+  if(d.act==="restore"){try{const o=JSON.parse($("sRest").value);if(!o||o.v!==1)throw 0;st=Object.assign(blank(),o);if(st.pace===87)st.pace="h";save();closeSheet();render();toast(t("tRestored"))}catch(err){toast(t("tBad"))}return}
+});
+$("sheet").addEventListener("click",e=>{if(e.target===$("sheet"))closeSheet()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+document.addEventListener("change",e=>{const id=e.target.id;
+  if(id==="nfJ"){nf.t=$("nfT").value;nf.j=+e.target.value;nf.s=surahsOf(nf.j)[0];nf.a=0;nf.p="";rNotes();return}
+  if(id==="nfS"){nf.t=$("nfT").value;nf.s=+e.target.value;nf.a=0;rNotes();return}
+  if(id==="nfA"){nf.a=+e.target.value;return}
+  if(id==="nfP"){nf.p=e.target.value;return}
+  if(id==="nfMS"){nf.t=$("nfT").value;nf.ms=+e.target.value;nf.ma=0;rNotes();return}
+  if(id==="nfMA"){nf.ma=+e.target.value;return}
+  if(id==="nfJF"){nflt.j=+e.target.value;rNotes();return}if(e.target.id==="tDate"){const te=st.test||(st.test={date:"",juz:[]});te.date=e.target.value;save();rTest()}});
+
+{const sp=document.createElement("div");sp.id="splash";sp.className="band";let seg="";
+  for(let j=0;j<30;j++){const a0=j/30*2*Math.PI-Math.PI/2+.03,a1=(j+1)/30*2*Math.PI-Math.PI/2-.03,P=(r,a)=>(100+r*Math.cos(a)).toFixed(1)+" "+(100+r*Math.sin(a)).toFixed(1);
+    seg+=`<path class="seg" style="animation-delay:${(j*0.035).toFixed(3)}s" fill="${j<29?"rgba(232,199,125,.85)":"#fff"}" d="M${P(96,a0)} A96 96 0 0 1 ${P(96,a1)} L${P(80,a1)} A80 80 0 0 0 ${P(80,a0)}Z"/>`}
+  sp.innerHTML=`<div class="sp"><svg viewBox="0 0 200 200">${seg}<rect class="st" x="62" y="62" width="76" height="76"/><rect class="st" x="62" y="62" width="76" height="76" transform="rotate(45 100 100)"/><g class="stf"><rect x="70" y="70" width="60" height="60"/><rect x="70" y="70" width="60" height="60" transform="rotate(45 100 100)"/><circle cx="100" cy="100" r="15" fill="#0b4b45"/></g></svg><div class="ttl">إتقان</div><div class="tag">${t("splashTag")}</div></div>`;
+  document.body.appendChild(sp);const go=()=>{sp.classList.add("out");setTimeout(()=>sp.remove(),700)};sp.addEventListener("click",go);setTimeout(go,2700)}
+view=fromHash();if(location.hash.endsWith("-sheet")){try{location.replace("#"+HV[view])}catch(e){}}
+if(!st.onboarded&&Object.keys(st.log).length)st.onboarded=1;
+render();if(!st.onboarded)onboard();
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
