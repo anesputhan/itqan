@@ -186,6 +186,7 @@ body.lock{overflow:hidden}
 <header class="band"><div>
   <div class="top">
     <div class="brand"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b4b45'/%3E%3Cg fill='%23e0b25a'%3E%3Crect x='28' y='28' width='44' height='44'/%3E%3Crect x='28' y='28' width='44' height='44' transform='rotate(45 50 50)'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='11' fill='%230b4b45'/%3E%3C/svg%3E" alt="" width="30" height="30" style="align-self:center;border-radius:8px;box-shadow:0 0 0 1px rgb(232 199 125/.5)"><b>Itqan</b><span>إتقان</span></div>
+    <button class="hb hide" id="instBtn" data-act="install" aria-label="Install"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></button>
     <button class="hb" id="langBtn" aria-label="Language">മല</button>
     <button class="hb" id="gear" aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
   </div>
@@ -270,6 +271,11 @@ const W={en:{
  revCount:(n,d)=>"Reviewed "+n+(n===1?" time":" times")+(d?" · last "+d:""),none:"Nothing here. When a place slips, note it above — that's all.",
  before:"Before you begin today",beforeD:n=>n+(n===1?" weak spot is":" weak spots are")+" in today's pages. Look at "+(n===1?"it":"them")+" first.",see:"See them"},
  backTo:"Today",closeL:"Close",
+ inst:{t:"Install Itqan on your phone",d:"Add it to your home screen. It opens full screen like an app, and works without internet.",btn:"Install",later:"Not now",sT:"Install Itqan",
+ ios:["Tap the Share button at the bottom of Safari (a square with an arrow pointing up).","Scroll down and tap “Add to Home Screen”.","Tap “Add”. Itqan now appears on your home screen."],
+ iosNote:"On iPhone this works in Safari. If you opened the link in another app, open it in Safari first.",
+ and:["Tap the ⋮ menu at the top right of Chrome.","Tap “Install app” or “Add to Home screen”.","Tap “Install”. Itqan now appears on your home screen."],
+ done:"Itqan is installed. Alhamdulillah!",set:"Install app on this phone"},
  secs:[["Juz map","See when each juz’s turn comes"],["Test plan","Calm preparation for the halaqah"],["Weak spots","Notes on places that slip"],["Heart","The way of the Salaf, duas, calm"]],splashTag:"Keep the Quran gently, day by day",
  bIn:"Breathe in",bHold:"Hold",bOut:"Breathe out",bStart:"Start",bBegin:"Begin breathing",bStop:"Stop",bEnd:"Alhamdulillah"
 },ml:{
@@ -313,6 +319,11 @@ const W={en:{
  revCount:(n,d)=>n+" തവണ നോക്കി"+(d?" · അവസാനം "+d:""),none:"ഇവിടെ ഒന്നുമില്ല. ഒരു സ്ഥലം തടയുമ്പോൾ മുകളിൽ കുറിച്ചാൽ മതി.",
  before:"ഇന്ന് തുടങ്ങുന്നതിന് മുമ്പ്",beforeD:n=>"ഇന്നത്തെ പേജുകളിൽ "+n+" കുറിപ്പ് ഉണ്ട്. ആദ്യം അത് ഒന്ന് നോക്കുക.",see:"കാണുക"},
  backTo:"ഇന്ന്",closeL:"അടയ്ക്കുക",
+ inst:{t:"ഇത്ഖാൻ ഫോണിൽ ഇൻസ്റ്റാൾ ചെയ്യുക",d:"ഹോം സ്ക്രീനിൽ ചേർക്കുക. ഒരു ആപ്പ് പോലെ മുഴുവൻ സ്ക്രീനിൽ തുറക്കും, ഇന്റർനെറ്റ് ഇല്ലാതെയും പ്രവർത്തിക്കും.",btn:"ഇൻസ്റ്റാൾ",later:"പിന്നീട്",sT:"ഇത്ഖാൻ ഇൻസ്റ്റാൾ ചെയ്യാൻ",
+ ios:["Safari-യുടെ താഴെയുള്ള Share ബട്ടൺ അമർത്തുക (മുകളിലേക്ക് അമ്പുള്ള ചതുരം).","താഴേക്ക് നീക്കി “Add to Home Screen” അമർത്തുക.","“Add” അമർത്തുക. ഇത്ഖാൻ ഹോം സ്ക്രീനിൽ വരും."],
+ iosNote:"iPhone-ൽ Safari-യിലാണ് ഇത് പ്രവർത്തിക്കുക. മറ്റൊരു ആപ്പിലാണ് ലിങ്ക് തുറന്നതെങ്കിൽ ആദ്യം Safari-യിൽ തുറക്കുക.",
+ and:["Chrome-ന്റെ മുകളിൽ വലതുവശത്തെ ⋮ മെനു അമർത്തുക.","“Install app” അല്ലെങ്കിൽ “Add to Home screen” അമർത്തുക.","“Install” അമർത്തുക. ഇത്ഖാൻ ഹോം സ്ക്രീനിൽ വരും."],
+ done:"ഇത്ഖാൻ ഇൻസ്റ്റാൾ ചെയ്തു. അൽഹംദുലില്ലാഹ്!",set:"ഈ ഫോണിൽ ആപ്പ് ഇൻസ്റ്റാൾ ചെയ്യുക"},
  secs:[["ജുസ്‌അ് മാപ്പ്","ഓരോ ജുസ്‌ഇന്റെയും ഊഴം എപ്പോൾ"],["ടെസ്റ്റ് പ്ലാൻ","ഹൽഖക്ക് ശാന്തമായ തയ്യാറെടുപ്പ്"],["തെറ്റുന്ന സ്ഥലങ്ങൾ","തടയുന്ന ഇടങ്ങളുടെ കുറിപ്പ്"],["ഹൃദയം","സലഫിന്റെ വഴി, ദുആ, ശാന്തത"]],splashTag:"ഖുർആൻ സൗമ്യമായി, ദിനംപ്രതി കാത്തുസൂക്ഷിക്കാൻ",
  bIn:"ശ്വാസം ഉള്ളിലേക്ക്",bHold:"പിടിച്ചുവെക്കുക",bOut:"പതുക്കെ പുറത്തേക്ക്",bStart:"തുടങ്ങാം",bBegin:"ശ്വസനം തുടങ്ങുക",bStop:"നിർത്തുക",bEnd:"അൽഹംദുലില്ലാഹ്"
 }};
@@ -443,6 +454,7 @@ function rToday(){const today=T(),L=st.log[today],out=[];
   const last=Object.keys(st.log).filter(k=>st.log[k].done&&k<today).sort().pop();
   out.push(`<div class="card hero"><div class="ringwrap">${ringSVG()}</div><p class="ar motto">وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ</p><p class="muted" style="text-align:center;margin:0">${t("motto")}</p></div>`);
   const secHTML=`<div class="sec-grid">${["map","test","notes","heart"].map((v,i)=>`<button class="sec c${i+1}" data-tab="${v}"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONS[i+1]}</svg></span><span><b>${t("secs")[i][0]}</b><small>${t("secs")[i][1]}</small></span></button>`).join("")}</div>`;
+  if(installable()&&!st.instHide){const I=t("inst");out.push(`<div class="card orn" style="display:flex;gap:14px;align-items:center"><img src="icons/icon-192.png" alt="" width="52" height="52" style="border-radius:14px;flex:none"><div style="flex:1"><b>${I.t}</b><p class="muted" style="margin:2px 0 8px">${I.d}</p><div class="row"><button class="btn pri" data-act="install">${I.btn}</button><button class="btn ghost" data-act="instlater">${I.later}</button></div></div></div>`)}
   if(last&&diff(last,today)>2&&!L)out.push(`<div class="card"><b>${t("wb")}</b> <span class="muted">${t("wb2")}</span></div>`);
   const hzLabel=(a)=>st.pace==="h"?`<span class="pill">${t("hizb")} ${hizbOf(a)} · ${t("hz")[hizbOf(a)-1]}</span> `:"";
   if(L&&L.done){const p=portion();
@@ -527,6 +539,16 @@ function breathe(){const el=$("breath"),tx=$("bTxt"),b=$("bBtn");if(bt){clearTim
 
 const ICONS=['<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>','<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>','<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/>','<path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/>','<path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/>'];
 const VIEWS=["today","map","test","notes","heart"];
+let instEvt=null;
+const isStandalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}};
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const isAndroid=/android/i.test(navigator.userAgent);
+const installable=()=>!isStandalone()&&!!document.querySelector('link[rel=manifest]')&&(instEvt||isIOS||isAndroid);
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();instEvt=e;header();if(view==="today")rToday()});
+addEventListener("appinstalled",()=>{instEvt=null;header();toast(t("inst").done);if(view==="today")rToday()});
+async function doInstall(){if(instEvt){instEvt.prompt();try{await instEvt.userChoice}catch(e){}instEvt=null;rToday();return}
+  const I=t("inst"),steps=isIOS?I.ios:I.and;
+  openSheet(`<h2>${I.sT}</h2>${steps.map((s,i)=>`<div class="step" style="margin:16px 0 0;font-weight:500;align-items:flex-start"><i>${i+1}</i><span>${s}</span></div>`).join("")}${isIOS?`<p class="muted" style="margin-top:16px">${I.iosNote}</p>`:""}<button class="btn pri" data-act="close" style="width:100%;margin-top:18px">${t("close")}</button>`)}
 const HV={today:"today",map:"juzmap",test:"test",notes:"notes",heart:"heart"};
 const fromHash=()=>{const x=(location.hash||"").slice(1).replace(/-sheet$/,"");return Object.keys(HV).find(k=>HV[k]===x)||"today"};
 const backBar=()=>`<button class="back" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>${t("backTo")}</button>`;
@@ -537,7 +559,7 @@ addEventListener("hashchange",()=>{const sheetOpen=$("sheet").classList.contains
   if(!location.hash.endsWith("-sheet")&&sheetOpen)closeSheetUI();
   const v=fromHash();if(v!==view){stopBreath();view=v;render();scrollTo(0,0)}});
 function header(){document.documentElement.lang=lang;document.body.classList.toggle("ml",lang==="ml");
-  $("langBtn").textContent=lang==="ml"?"EN":"മല";$("greet").textContent=t("greet")(st.name);
+  $("langBtn").textContent=lang==="ml"?"EN":"മല";$("instBtn").classList.toggle("hide",!installable());$("greet").textContent=t("greet")(st.name);
   let h="";try{h=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric"}).format(new Date())}catch(e){}
   $("dates").textContent=(h?h+" · ":"")+fmt(T())+" · "+t("sub")}
 function render(){header();
@@ -567,6 +589,7 @@ function settings(){openSheet(`<h2>${t("setT")}</h2><label class="field"><span>$
   <label class="field"><span>${t("sSplit")}</span><select id="sSit">${[1,2,3].map(n=>`<option value="${n}"${st.sit===n?" selected":""}>${t("sits")(n)}</option>`).join("")}</select></label>
   <label class="field"><span>${t("sPos")}</span><input id="sPos" type="number" inputmode="numeric" min="1" max="604" value="${st.pos}"></label>
   <button class="btn pri" data-act="saveset">${t("save")}</button>
+  ${installable()?`<button class="btn" data-act="install" style="width:100%;margin-top:14px">${t("inst").set}</button>`:""}
   <h2 style="margin-top:24px">${t("bkT")}</h2><p class="muted">${t("bkD")}</p>
   <button class="btn" data-act="copy">${t("copy")}</button><textarea id="sRest" placeholder="${esc(t("pastePh"))}" style="margin-top:10px"></textarea>
   <div class="row" style="margin-top:8px;justify-content:space-between"><button class="btn" data-act="restore">${t("restore")}</button><button class="btn ghost" data-act="close">${t("close")}</button></div>`)}
@@ -607,6 +630,8 @@ document.addEventListener("click",async e=>{const b=e.target.closest("button");i
   if(d.act==="cleartest"){st.test=null;st.tdone={};save();rTest();return}
   if(d.fix){const n=st.notes.find(n=>String(n.id)===d.fix);if(n)n.f=!n.f;save();rNotes();return}
   if(d.act==="close"){closeSheet();return}
+  if(d.act==="install"){if($("sheet").classList.contains("open")&&instEvt)closeSheet();doInstall();return}
+  if(d.act==="instlater"){st.instHide=1;save();rToday();return}
   if(d.act==="saveset"){st.name=$("sName").value.trim().slice(0,40);const v=$("sPace").value;st.pace=v==="h"?"h":+v;st.sit=+$("sSit").value;const p=+$("sPos").value;if(p>=1&&p<=604)st.pos=p;save();closeSheet();render();toast(t("tSet"));return}
   if(d.act==="copy"){try{await navigator.clipboard.writeText(JSON.stringify(st));toast(t("tCopied"))}catch(err){$("sRest").value=JSON.stringify(st);toast(t("tSelect"))}return}
   if(d.act==="restore"){try{const o=JSON.parse($("sRest").value);if(!o||o.v!==1)throw 0;st=Object.assign(blank(),o);if(st.pace===87)st.pace="h";save();closeSheet();render();toast(t("tRestored"))}catch(err){toast(t("tBad"))}return}
